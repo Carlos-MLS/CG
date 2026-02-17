@@ -1,0 +1,27 @@
+Trabalho é a minha dir principal onde tenho o projeto
+
+COMPILAR (CMAKE):
+  $ cd Trabalho && mkdir -p build && cd build
+  $ cmake .. && make
+EXECUTAR:
+  $ cd build
+  $ ./generator plane 5 10 plane.3d
+  $ ./generator box 2 3 4 5 box.3d
+  $ ./generator sphere 1 20 20 sphere.3d
+  $ ./generator cone 1 2 20 10 cone.3d
+FORMATO .3D:
+  Linha 1: número de vértices
+  Restantes: x y z (um vértice por linha)
+POR IMPLEMENTAR:
+  - generator/primitives/box.h → gerarBox()
+  - generator/primitives/sphere.h → gerarSphere()
+  - generator/primitives/cone.h → gerarCone()
+  - Descomentar chamadas no main.cpp (linhas 75, 92, 109)
+CLION:
+  File → Open → 'Trabalho/' → Build (Ctrl+F9)
+NOTES:
+  - Plane: XZ centrado (y=0)
+  - Box/Sphere/Cone: centrados na origem
+  - Cone: base em XZ, vértice em (0,height,0)
+  - Vértices em sentido anti-horário
+==========================================

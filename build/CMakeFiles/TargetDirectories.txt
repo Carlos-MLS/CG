@@ -1,0 +1,3 @@
+/home/francisco0504/uni/6semestre/CG/Trabalho/build/CMakeFiles/generator.dir
+/home/francisco0504/uni/6semestre/CG/Trabalho/build/CMakeFiles/edit_cache.dir
+/home/francisco0504/uni/6semestre/CG/Trabalho/build/CMakeFiles/rebuild_cache.dir
