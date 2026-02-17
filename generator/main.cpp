@@ -121,7 +121,7 @@ int main (int argc, char** argv) {
             printUsage();
         }
     } catch (const exception& e) {
-        cerr << "Erro " << e.what() << endl;
+        cerr << "Erro: " << e.what() << endl;
         return 1;
     }
 
