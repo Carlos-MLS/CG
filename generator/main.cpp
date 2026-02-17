@@ -114,6 +114,7 @@ int main (int argc, char** argv) {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
             }
+            cout << "Cone gerado com sucesso: " << outputPath << endl;
         }
         else {
             cerr <<  "Erro de Primitiva desconhecida '" << primitiva << "'" << endl;
