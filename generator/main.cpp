@@ -10,9 +10,8 @@
 
 using namespace std;
 
-
-
-void printUsage() {
+void printUsage()
+{
     cout << "Uso do Gerador de Primitivas:" << endl;
     cout << "  generator plane <length> <divisions> <output_file>" << endl;
     cout << "  generator box <x> <y> <z> <divisions> <output_file>" << endl;
@@ -26,9 +25,10 @@ void printUsage() {
     cout << "  generator cone 1 2 20 10 cone.3d" << endl;
 }
 
-
-int main (int argc, char** argv) {
-    if (argc < 2) {
+int main(int argc, char **argv)
+{
+    if (argc < 2)
+    {
         cerr << "Número de argumentos errado!" << endl;
         printUsage();
         return 1;
@@ -37,65 +37,78 @@ int main (int argc, char** argv) {
     string primitiva = argv[1];
     vector<Point3D> arrayVertices;
 
-    try {
-        if (strcmp(primitiva.c_str(),"plane") == 0) {
-            if (argc != 5) {
+    try
+    {
+        if (strcmp(primitiva.c_str(), "plane") == 0)
+        {
+            if (argc != 5)
+            {
                 cerr << "Erro: Número incorreto de argumentos para 'plane'" << endl;
                 printUsage();
                 return 1;
             }
-            //args para o plane
-            float length  = stof(argv[2]);
+
+            float length = stof(argv[2]);
             int divisions = stoi(argv[3]);
             string outputPath = argv[4];
 
-            //lógica para o para gerar o plane aqui
             arrayVertices = gerarPlane(length, divisions);
-            if (!FileWriter::writeToFile(outputPath, arrayVertices)) {
+            if (!FileWriter::writeToFile(outputPath, arrayVertices))
+            {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
             }
         }
-        else if (strcmp(primitiva.c_str(),"box") == 0) {
-            if (argc != 7) {
+        else if (strcmp(primitiva.c_str(), "box") == 0)
+        {
+            if (argc != 7)
+            {
                 cerr << "Erro com Número incorreto de argumentos para 'box'" << endl;
                 printUsage();
                 return 1;
             }
-            //args para box
             float x = stof(argv[2]);
             float y = stof(argv[3]);
             float z = stof(argv[4]);
-            int divisions =  stoi(argv[5]);
+            int divisions = stoi(argv[5]);
             string outputPath = argv[6];
 
-            //lógica para box
-
-
+            // gerar a box e escrever no ficheiro
+            arrayVertices = gerarBox(x, y, z, divisions);
+            if (!FileWriter::writeToFile(outputPath, arrayVertices))
+            {
+                cerr << "Erro ao escrever o ficheiro" << endl;
+                return 1;
+            }
+            cout << "Box gerada com sucesso: " << outputPath << endl;
         }
-        else if (strcmp(primitiva.c_str(),"sphere") == 0) {
-            if (argc != 6) {
+        else if (strcmp(primitiva.c_str(), "sphere") == 0)
+        {
+            if (argc != 6)
+            {
                 cerr << "Erro com Número incorreto de argumentos para 'sphere'" << endl;
                 printUsage();
                 return 1;
             }
-            //args para sphere
             float radius = stof(argv[2]);
             int slices = stoi(argv[3]);
-            int stacks  = stoi(argv[4]);
+            int stacks = stoi(argv[4]);
             string outputPath = argv[5];
 
-            //lógica para sphere aqui agr
-            // TODO: Implementar gerarSphere(radius, slices, stacks)
-            // arrayVertices = gerarSphere(radius, slices, stacks);
+            // gerar esfera
+            arrayVertices = gerarSphere(radius, slices, stacks);
 
-            if (!FileWriter::writeToFile(outputPath, arrayVertices)) {
+            if (!FileWriter::writeToFile(outputPath, arrayVertices))
+            {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
             }
+            cout << "Esfera gerada com sucesso: " << outputPath << endl;
         }
-        else if (strcmp(primitiva.c_str(),"cone") == 0) {
-            if (argc != 7) {
+        else if (strcmp(primitiva.c_str(), "cone") == 0)
+        {
+            if (argc != 7)
+            {
                 cerr << "Erro pq número incorreto de argumentos para 'cone'" << endl;
                 printUsage();
                 return 1;
@@ -103,24 +116,27 @@ int main (int argc, char** argv) {
             float bottomRadius = stof(argv[2]);
             float height = stof(argv[3]);
             int slices = stoi(argv[4]);
-            int stacks  = stoi(argv[5]);
+            int stacks = stoi(argv[5]);
             string outputPath = argv[6];
 
-            //lógica para o cone agr
-            // TODO: Implementar gerarCone(bottomRadius, height, slices, stacks)
-            // arrayVertices = gerarCone(bottomRadius, height, slices, stacks);
+            // gerar o cone
+            arrayVertices = gerarCone(bottomRadius, height, slices, stacks);
 
-            if (!FileWriter::writeToFile(outputPath, arrayVertices)) {
+            if (!FileWriter::writeToFile(outputPath, arrayVertices))
+            {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
             }
             cout << "Cone gerado com sucesso: " << outputPath << endl;
         }
-        else {
-            cerr <<  "Erro de Primitiva desconhecida '" << primitiva << "'" << endl;
+        else
+        {
+            cerr << "Erro de Primitiva desconhecida '" << primitiva << "'" << endl;
             printUsage();
         }
-    } catch (const exception& e) {
+    }
+    catch (const exception &e)
+    {
         cerr << "Erro: " << e.what() << endl;
         return 1;
     }
