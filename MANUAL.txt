@@ -1,20 +1,21 @@
-Trabalho é a minha dir principal onde tenho o projeto
-o repo chama-se CG não é suposto ser nessa?
+A root é a pasta onde têm o build, engine, generator etc
 
-COMPILAR (CMAKE):
-   cd Trabalho && mkdir -p build && cd build
-   cmake .. -B . && make
+1º COMPILAR (CMAKE): (na root)
+  cd build
+  cmake .. -B . && make
   ou usar a app CMake como nas aulas
 
-GERAR PRIMITIVAS:
-   cd build
-   ./generator plane 5 10 plane.3d
-   ./generator box 2 3 4 5 box.3d
-   ./generator sphere 1 20 20 sphere.3d
-   ./generator cone 1 2 20 10 cone.3d
+2º GERAR PRIMITIVAS: (na build)
+./generator plane 5 10 plane.3d
+./generator box 2 3 4 5 box.3d
+./generator sphere 1 20 20 sphere.3d
+./generator cone 1 2 20 10 cone.3d
 
-VER NO ENGINE  COMANDOS (OpenGL):
+3º VER NO ENGINE  COMANDOS (OpenGL): (na build)
    ./engine ../config.xml
+
+
+
   O config.xml define a janela, camera e que modelos carregar.
   Controlos:
     WASD  - rodar camera
