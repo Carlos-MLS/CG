@@ -1,5 +1,5 @@
-CMakeFiles/generator.dir/generator/main.cpp.o: \
- /home/carlos09/1_uni/ano3/CG/trab/CG/generator/main.cpp \
+CMakeFiles/engine.dir/engine/main.cpp.o: \
+ /home/carlos09/1_uni/ano3/CG/trab/CG/engine/main.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/13/iostream \
  /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
@@ -149,25 +149,12 @@ CMakeFiles/generator.dir/generator/main.cpp.o: \
  /usr/include/c++/13/bits/locale_facets.tcc \
  /usr/include/c++/13/bits/basic_ios.tcc \
  /usr/include/c++/13/bits/ostream.tcc /usr/include/c++/13/istream \
- /usr/include/c++/13/bits/istream.tcc /usr/include/c++/13/cstring \
- /usr/include/string.h /usr/include/strings.h /usr/include/c++/13/vector \
+ /usr/include/c++/13/bits/istream.tcc /usr/include/c++/13/vector \
  /usr/include/c++/13/bits/stl_uninitialized.h \
  /usr/include/c++/13/bits/stl_vector.h \
  /usr/include/c++/13/bits/stl_bvector.h \
- /usr/include/c++/13/bits/vector.tcc \
- /home/carlos09/1_uni/ano3/CG/trab/CG/generator/../utils/point.h \
- /home/carlos09/1_uni/ano3/CG/trab/CG/generator/../utils/fileWriter.h \
- /usr/include/c++/13/fstream /usr/include/c++/13/bits/codecvt.h \
- /usr/include/x86_64-linux-gnu/c++/13/bits/basic_file.h \
- /usr/include/x86_64-linux-gnu/c++/13/bits/c++io.h \
- /usr/include/c++/13/bits/fstream.tcc \
- /home/carlos09/1_uni/ano3/CG/trab/CG/generator/../utils/point.h \
- /home/carlos09/1_uni/ano3/CG/trab/CG/generator/primitives/plane.h \
- /home/carlos09/1_uni/ano3/CG/trab/CG/generator/primitives/../../utils/point.h \
- /home/carlos09/1_uni/ano3/CG/trab/CG/generator/primitives/box.h \
- /home/carlos09/1_uni/ano3/CG/trab/CG/generator/primitives/sphere.h \
- /usr/include/c++/13/cmath /usr/include/math.h \
- /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+ /usr/include/c++/13/bits/vector.tcc /usr/include/c++/13/cmath \
+ /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
  /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
@@ -188,5 +175,27 @@ CMakeFiles/generator.dir/generator/main.cpp.o: \
  /usr/include/c++/13/tr1/modified_bessel_func.tcc \
  /usr/include/c++/13/tr1/poly_hermite.tcc \
  /usr/include/c++/13/tr1/poly_laguerre.tcc \
- /usr/include/c++/13/tr1/riemann_zeta.tcc \
- /home/carlos09/1_uni/ano3/CG/trab/CG/generator/primitives/cone.h
+ /usr/include/c++/13/tr1/riemann_zeta.tcc /usr/include/GL/glut.h \
+ /usr/include/GL/freeglut_std.h /usr/include/GL/gl.h \
+ /usr/include/GL/glext.h /usr/include/KHR/khrplatform.h \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
+ /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
+ /usr/include/x86_64-linux-gnu/bits/stdint-least.h /usr/include/GL/glu.h \
+ /usr/include/c++/13/stdlib.h \
+ /home/carlos09/1_uni/ano3/CG/trab/CG/engine/parser/xmlparser.h \
+ /usr/include/tinyxml2.h /usr/include/c++/13/climits \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/limits.h \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/syslimits.h \
+ /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/local_lim.h \
+ /usr/include/linux/limits.h \
+ /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/uio_lim.h /usr/include/c++/13/cstring \
+ /usr/include/string.h /usr/include/strings.h \
+ /home/carlos09/1_uni/ano3/CG/trab/CG/engine/model/model.h \
+ /usr/include/c++/13/fstream /usr/include/c++/13/bits/codecvt.h \
+ /usr/include/x86_64-linux-gnu/c++/13/bits/basic_file.h \
+ /usr/include/x86_64-linux-gnu/c++/13/bits/c++io.h \
+ /usr/include/c++/13/bits/fstream.tcc \
+ /home/carlos09/1_uni/ano3/CG/trab/CG/engine/model/../../utils/point.h

@@ -1,3 +1,4 @@
-/home/francisco0504/uni/6semestre/CG/Trabalho/build/CMakeFiles/generator.dir
-/home/francisco0504/uni/6semestre/CG/Trabalho/build/CMakeFiles/edit_cache.dir
-/home/francisco0504/uni/6semestre/CG/Trabalho/build/CMakeFiles/rebuild_cache.dir
+/home/carlos09/1_uni/ano3/CG/trab/CG/build/CMakeFiles/generator.dir
+/home/carlos09/1_uni/ano3/CG/trab/CG/build/CMakeFiles/engine.dir
+/home/carlos09/1_uni/ano3/CG/trab/CG/build/CMakeFiles/edit_cache.dir
+/home/carlos09/1_uni/ano3/CG/trab/CG/build/CMakeFiles/rebuild_cache.dir
