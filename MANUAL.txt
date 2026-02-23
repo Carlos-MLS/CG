@@ -4,6 +4,7 @@ o repo chama-se CG não é suposto ser nessa?
 COMPILAR (CMAKE):
   $ cd Trabalho && mkdir -p build && cd build
   $ cmake .. -B . && make
+  ou usar a app CMake como nas aulas
 
 GERAR PRIMITIVAS:
   $ cd build
@@ -12,8 +13,8 @@ GERAR PRIMITIVAS:
   $ ./generator sphere 1 20 20 sphere.3d
   $ ./generator cone 1 2 20 10 cone.3d
 
-VER NO ENGINE (OpenGL):
-  $ ./engine config.xml
+VER NO ENGINE  COMANDOS (OpenGL):
+  $ ./engine ../config.xml
   O config.xml define a janela, camera e que modelos carregar.
   Controlos:
     WASD  - rodar camera
@@ -44,12 +45,6 @@ FORMATO XML (config):
     </group>
   </world>
 
-IMPLEMENTADO:
-  - generator/primitives/plane.h → gerarPlane()
-  - generator/primitives/box.h → gerarBox()
-  - generator/primitives/sphere.h → gerarSphere()
-  - generator/primitives/cone.h → gerarCone()
-  - engine/main.cpp → engine OpenGL com parser XML
 
 ESTRUTURA:
   generator/
@@ -63,12 +58,5 @@ ESTRUTURA:
     point.h               - struct Point3D
     fileWriter.h          - escreve vertices para ficheiro
 
-CLION:
-  File → Open → 'Trabalho/' → Build (Ctrl+F9)
 
-NOTES:
-  - Plane: XZ centrado (y=0)
-  - Box/Sphere/Cone: centrados na origem
-  - Cone: base em XZ, vértice em (0,height,0)
-  - Vértices em sentido anti-horário
-==========================================
+
