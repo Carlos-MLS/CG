@@ -14,13 +14,13 @@ void printUsage()
 {
     cout << "Uso do Gerador de Primitivas:" << endl;
     cout << "  generator plane <length> <divisions> <output_file>" << endl;
-    cout << "  generator box <x> <y> <z> <divisions> <output_file>" << endl;
+    cout << "  generator box <size> <divisions> <output_file>" << endl;
     cout << "  generator sphere <radius> <slices> <stacks> <output_file>" << endl;
     cout << "  generator cone <radius> <height> <slices> <stacks> <output_file>" << endl;
     cout << endl;
     cout << "Exemplos:" << endl;
     cout << "  generator plane 5 10 plane.3d" << endl;
-    cout << "  generator box 2 3 4 5 box.3d" << endl;
+    cout << "  generator box 2 3 box.3d" << endl;
     cout << "  generator sphere 1 20 20 sphere.3d" << endl;
     cout << "  generator cone 1 2 20 10 cone.3d" << endl;
 }
@@ -58,23 +58,22 @@ int main(int argc, char **argv)
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
             }
+            cout << "Plane gerado com sucesso: " << outputPath << endl;
         }
         else if (strcmp(primitiva.c_str(), "box") == 0)
         {
-            if (argc != 7)
+            if (argc != 5)
             {
                 cerr << "Erro com Número incorreto de argumentos para 'box'" << endl;
                 printUsage();
                 return 1;
             }
-            float x = stof(argv[2]);
-            float y = stof(argv[3]);
-            float z = stof(argv[4]);
-            int divisions = stoi(argv[5]);
-            string outputPath = argv[6];
+            float size = stof(argv[2]);
+            int divisions = stoi(argv[3]);
+            string outputPath = argv[4];
 
             // gerar a box e escrever no ficheiro
-            arrayVertices = gerarBox(x, y, z, divisions);
+            arrayVertices = gerarBox(size, divisions);
             if (!FileWriter::writeToFile(outputPath, arrayVertices))
             {
                 cerr << "Erro ao escrever o ficheiro" << endl;

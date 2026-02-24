@@ -10,7 +10,7 @@
 
 using namespace std;
 
-inline vector<Point3D> gerarBox(float x, float y, float z, int divisions)
+inline vector<Point3D> gerarBox(float size, int divisions)
 {
     vector<Point3D> vertices;
 
@@ -20,14 +20,10 @@ inline vector<Point3D> gerarBox(float x, float y, float z, int divisions)
     }
 
     // metade de cada dimensão pra centrar na origem
-    float halfX = x / 2.0f;
-    float halfY = y / 2.0f;
-    float halfZ = z / 2.0f;
+    float halfSize = size / 2.0f;
 
     // tamanho de cada subdivisao
-    float stepX = x / divisions;
-    float stepY = y / divisions;
-    float stepZ = z / divisions;
+    float step = size / divisions;
 
     // iterar sobre a grelha de subdivisões
     for (int i = 0; i < divisions; i++)
@@ -35,75 +31,75 @@ inline vector<Point3D> gerarBox(float x, float y, float z, int divisions)
         for (int j = 0; j < divisions; j++)
         {
 
-            // face da frente (z = +halfZ)
-            float x1 = -halfX + i * stepX;
-            float x2 = -halfX + (i + 1) * stepX;
-            float y1 = -halfY + j * stepY;
-            float y2 = -halfY + (j + 1) * stepY;
+            // face da frente (z = +halfSize)
+            float x1 = -halfSize + i * step;
+            float x2 = -halfSize + (i + 1) * step;
+            float y1 = -halfSize + j * step;
+            float y2 = -halfSize + (j + 1) * step;
 
-            vertices.push_back(Point3D(x1, y1, halfZ));
-            vertices.push_back(Point3D(x2, y1, halfZ));
-            vertices.push_back(Point3D(x2, y2, halfZ));
+            vertices.push_back(Point3D(x1, y1, halfSize));
+            vertices.push_back(Point3D(x2, y1, halfSize));
+            vertices.push_back(Point3D(x2, y2, halfSize));
 
-            vertices.push_back(Point3D(x1, y1, halfZ));
-            vertices.push_back(Point3D(x2, y2, halfZ));
-            vertices.push_back(Point3D(x1, y2, halfZ));
+            vertices.push_back(Point3D(x1, y1, halfSize));
+            vertices.push_back(Point3D(x2, y2, halfSize));
+            vertices.push_back(Point3D(x1, y2, halfSize));
 
-            // face de tras (z = -halfZ)
+            // face de tras (z = -halfSize)
             // aqui invertemos a ordem dos vertices pra ficar CCW visto de fora
-            vertices.push_back(Point3D(x2, y1, -halfZ));
-            vertices.push_back(Point3D(x1, y1, -halfZ));
-            vertices.push_back(Point3D(x1, y2, -halfZ));
+            vertices.push_back(Point3D(x2, y1, -halfSize));
+            vertices.push_back(Point3D(x1, y1, -halfSize));
+            vertices.push_back(Point3D(x1, y2, -halfSize));
 
-            vertices.push_back(Point3D(x2, y1, -halfZ));
-            vertices.push_back(Point3D(x1, y2, -halfZ));
-            vertices.push_back(Point3D(x2, y2, -halfZ));
+            vertices.push_back(Point3D(x2, y1, -halfSize));
+            vertices.push_back(Point3D(x1, y2, -halfSize));
+            vertices.push_back(Point3D(x2, y2, -halfSize));
 
-            // face direita (x = +halfX)
-            float z1 = -halfZ + i * stepZ;
-            float z2 = -halfZ + (i + 1) * stepZ;
-            y1 = -halfY + j * stepY;
-            y2 = -halfY + (j + 1) * stepY;
+            // face direita (x = +halfSize)
+            float z1 = -halfSize + i * step;
+            float z2 = -halfSize + (i + 1) * step;
+            y1 = -halfSize + j * step;
+            y2 = -halfSize + (j + 1) * step;
 
-            vertices.push_back(Point3D(halfX, y1, z2));
-            vertices.push_back(Point3D(halfX, y1, z1));
-            vertices.push_back(Point3D(halfX, y2, z1));
+            vertices.push_back(Point3D(halfSize, y1, z2));
+            vertices.push_back(Point3D(halfSize, y1, z1));
+            vertices.push_back(Point3D(halfSize, y2, z1));
 
-            vertices.push_back(Point3D(halfX, y1, z2));
-            vertices.push_back(Point3D(halfX, y2, z1));
-            vertices.push_back(Point3D(halfX, y2, z2));
+            vertices.push_back(Point3D(halfSize, y1, z2));
+            vertices.push_back(Point3D(halfSize, y2, z1));
+            vertices.push_back(Point3D(halfSize, y2, z2));
 
-            // face esquerda (x = -halfX)
-            vertices.push_back(Point3D(-halfX, y1, z1));
-            vertices.push_back(Point3D(-halfX, y1, z2));
-            vertices.push_back(Point3D(-halfX, y2, z2));
+            // face esquerda (x = -halfSize)
+            vertices.push_back(Point3D(-halfSize, y1, z1));
+            vertices.push_back(Point3D(-halfSize, y1, z2));
+            vertices.push_back(Point3D(-halfSize, y2, z2));
 
-            vertices.push_back(Point3D(-halfX, y1, z1));
-            vertices.push_back(Point3D(-halfX, y2, z2));
-            vertices.push_back(Point3D(-halfX, y2, z1));
+            vertices.push_back(Point3D(-halfSize, y1, z1));
+            vertices.push_back(Point3D(-halfSize, y2, z2));
+            vertices.push_back(Point3D(-halfSize, y2, z1));
 
-            // face de cima (y = +halfY)
-            x1 = -halfX + i * stepX;
-            x2 = -halfX + (i + 1) * stepX;
-            z1 = -halfZ + j * stepZ;
-            z2 = -halfZ + (j + 1) * stepZ;
+            // face de cima (y = +halfSize)
+            x1 = -halfSize + i * step;
+            x2 = -halfSize + (i + 1) * step;
+            z1 = -halfSize + j * step;
+            z2 = -halfSize + (j + 1) * step;
 
-            vertices.push_back(Point3D(x1, halfY, z1));
-            vertices.push_back(Point3D(x1, halfY, z2));
-            vertices.push_back(Point3D(x2, halfY, z2));
+            vertices.push_back(Point3D(x1, halfSize, z1));
+            vertices.push_back(Point3D(x1, halfSize, z2));
+            vertices.push_back(Point3D(x2, halfSize, z2));
 
-            vertices.push_back(Point3D(x1, halfY, z1));
-            vertices.push_back(Point3D(x2, halfY, z2));
-            vertices.push_back(Point3D(x2, halfY, z1));
+            vertices.push_back(Point3D(x1, halfSize, z1));
+            vertices.push_back(Point3D(x2, halfSize, z2));
+            vertices.push_back(Point3D(x2, halfSize, z1));
 
-            // face de baixo (y = -halfY)
-            vertices.push_back(Point3D(x2, -halfY, z1));
-            vertices.push_back(Point3D(x2, -halfY, z2));
-            vertices.push_back(Point3D(x1, -halfY, z2));
+            // face de baixo (y = -halfSize)
+            vertices.push_back(Point3D(x2, -halfSize, z1));
+            vertices.push_back(Point3D(x2, -halfSize, z2));
+            vertices.push_back(Point3D(x1, -halfSize, z2));
 
-            vertices.push_back(Point3D(x2, -halfY, z1));
-            vertices.push_back(Point3D(x1, -halfY, z2));
-            vertices.push_back(Point3D(x1, -halfY, z1));
+            vertices.push_back(Point3D(x2, -halfSize, z1));
+            vertices.push_back(Point3D(x1, -halfSize, z2));
+            vertices.push_back(Point3D(x1, -halfSize, z1));
         }
     }
 
