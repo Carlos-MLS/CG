@@ -5,6 +5,7 @@
 #ifndef CONE_H
 #define CONE_H
 
+#define _USE_MATH_DEFINES
 #include <vector>
 #include <cmath>
 #include "../../utils/point.h"
@@ -33,10 +34,10 @@ inline vector<Point3D> gerarCone(float bottomRadius, float height, int slices, i
         Point3D p1(bottomRadius * cos(a1), 0.0f, bottomRadius * sin(a1));
         Point3D p2(bottomRadius * cos(a2), 0.0f, bottomRadius * sin(a2));
 
-        // sentido anti-horario visto de baixo
+        // CCW visto de baixo (normal aponta para baixo)
         vertices.push_back(centro);
-        vertices.push_back(p2);
         vertices.push_back(p1);
+        vertices.push_back(p2);
     }
 
     // agora o corpo - dividido em stacks
@@ -59,17 +60,17 @@ inline vector<Point3D> gerarCone(float bottomRadius, float height, int slices, i
             Point3D v3(r2 * cos(a2), y2, r2 * sin(a2));
             Point3D v4(r2 * cos(a1), y2, r2 * sin(a1));
 
-            // triangulo 1
+            // triangulo 1 (diagonal v1-v3, winding CCW visto de fora)
             vertices.push_back(v1);
+            vertices.push_back(v3);
             vertices.push_back(v2);
-            vertices.push_back(v4);
 
             // triangulo 2 (na ultima stack ja converge no vertice, nao precisa)
             if (i != stacks - 1)
             {
-                vertices.push_back(v2);
-                vertices.push_back(v3);
+                vertices.push_back(v1);
                 vertices.push_back(v4);
+                vertices.push_back(v3);
             }
         }
     }

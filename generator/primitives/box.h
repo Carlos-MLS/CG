@@ -39,9 +39,9 @@ inline vector<Point3D> gerarBox(float size, int divisions)
 
             vertices.push_back(Point3D(x1, y1, halfSize));
             vertices.push_back(Point3D(x2, y1, halfSize));
-            vertices.push_back(Point3D(x2, y2, halfSize));
+            vertices.push_back(Point3D(x1, y2, halfSize));
 
-            vertices.push_back(Point3D(x1, y1, halfSize));
+            vertices.push_back(Point3D(x2, y1, halfSize));
             vertices.push_back(Point3D(x2, y2, halfSize));
             vertices.push_back(Point3D(x1, y2, halfSize));
 
@@ -49,9 +49,9 @@ inline vector<Point3D> gerarBox(float size, int divisions)
             // aqui invertemos a ordem dos vertices pra ficar CCW visto de fora
             vertices.push_back(Point3D(x2, y1, -halfSize));
             vertices.push_back(Point3D(x1, y1, -halfSize));
-            vertices.push_back(Point3D(x1, y2, -halfSize));
+            vertices.push_back(Point3D(x2, y2, -halfSize));
 
-            vertices.push_back(Point3D(x2, y1, -halfSize));
+            vertices.push_back(Point3D(x1, y1, -halfSize));
             vertices.push_back(Point3D(x1, y2, -halfSize));
             vertices.push_back(Point3D(x2, y2, -halfSize));
 
@@ -63,18 +63,18 @@ inline vector<Point3D> gerarBox(float size, int divisions)
 
             vertices.push_back(Point3D(halfSize, y1, z2));
             vertices.push_back(Point3D(halfSize, y1, z1));
-            vertices.push_back(Point3D(halfSize, y2, z1));
+            vertices.push_back(Point3D(halfSize, y2, z2));
 
-            vertices.push_back(Point3D(halfSize, y1, z2));
+            vertices.push_back(Point3D(halfSize, y1, z1));
             vertices.push_back(Point3D(halfSize, y2, z1));
             vertices.push_back(Point3D(halfSize, y2, z2));
 
             // face esquerda (x = -halfSize)
             vertices.push_back(Point3D(-halfSize, y1, z1));
             vertices.push_back(Point3D(-halfSize, y1, z2));
-            vertices.push_back(Point3D(-halfSize, y2, z2));
+            vertices.push_back(Point3D(-halfSize, y2, z1));
 
-            vertices.push_back(Point3D(-halfSize, y1, z1));
+            vertices.push_back(Point3D(-halfSize, y1, z2));
             vertices.push_back(Point3D(-halfSize, y2, z2));
             vertices.push_back(Point3D(-halfSize, y2, z1));
 
@@ -86,18 +86,18 @@ inline vector<Point3D> gerarBox(float size, int divisions)
 
             vertices.push_back(Point3D(x1, halfSize, z1));
             vertices.push_back(Point3D(x1, halfSize, z2));
-            vertices.push_back(Point3D(x2, halfSize, z2));
+            vertices.push_back(Point3D(x2, halfSize, z1));
 
-            vertices.push_back(Point3D(x1, halfSize, z1));
+            vertices.push_back(Point3D(x1, halfSize, z2));
             vertices.push_back(Point3D(x2, halfSize, z2));
             vertices.push_back(Point3D(x2, halfSize, z1));
 
             // face de baixo (y = -halfSize)
             vertices.push_back(Point3D(x2, -halfSize, z1));
             vertices.push_back(Point3D(x2, -halfSize, z2));
-            vertices.push_back(Point3D(x1, -halfSize, z2));
+            vertices.push_back(Point3D(x1, -halfSize, z1));
 
-            vertices.push_back(Point3D(x2, -halfSize, z1));
+            vertices.push_back(Point3D(x2, -halfSize, z2));
             vertices.push_back(Point3D(x1, -halfSize, z2));
             vertices.push_back(Point3D(x1, -halfSize, z1));
         }

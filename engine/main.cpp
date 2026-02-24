@@ -62,22 +62,6 @@ void renderScene()
 
     glPolygonMode(GL_FRONT_AND_BACK, modoDesenho);
 
-    // desenhar eixos pra referencia
-    glBegin(GL_LINES);
-    // X vermelho
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(5.0f, 0.0f, 0.0f);
-    // Y verde
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, 5.0f, 0.0f);
-    // Z azul
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, 0.0f, 5.0f);
-    glEnd();
-
     // desenhar os modelos todos
     glColor3f(1.0f, 1.0f, 1.0f);
     for (const auto &model : models)
@@ -89,6 +73,24 @@ void renderScene()
         }
         glEnd();
     }
+
+    // desenhar eixos por cima de tudo (sem depth test)
+    glDisable(GL_DEPTH_TEST);
+    glBegin(GL_LINES);
+    // X vermelho
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(-100.0f, 0.0f, 0.0f);
+    glVertex3f(100.0f, 0.0f, 0.0f);
+    // Y verde
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.0f, -100.0f, 0.0f);
+    glVertex3f(0.0f, 100.0f, 0.0f);
+    // Z azul
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(0.0f, 0.0f, -100.0f);
+    glVertex3f(0.0f, 0.0f, 100.0f);
+    glEnd();
+    glEnable(GL_DEPTH_TEST);
 
     glutSwapBuffers();
 }

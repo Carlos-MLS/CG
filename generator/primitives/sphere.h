@@ -5,6 +5,7 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
+#define _USE_MATH_DEFINES
 #include <vector>
 #include <cmath>
 #include "../../utils/point.h"
@@ -33,37 +34,40 @@ inline vector<Point3D> gerarSphere(float radius, int slices, int stacks)
             float phi2 = 2.0f * M_PI * (j + 1) / slices;
 
             // calcular os 4 vertices do quad com coordenadas esféricas
-            // x = r * sin(theta) * cos(phi)
+            // x = r * sin(theta) * sin(phi)
             // y = r * cos(theta)
-            // z = r * sin(theta) * sin(phi)
-            Point3D v1(radius * sin(theta1) * cos(phi1),
+            // z = r * sin(theta) * cos(phi)
+            Point3D v1(radius * sin(theta1) * sin(phi1),
                        radius * cos(theta1),
-                       radius * sin(theta1) * sin(phi1));
+                       radius * sin(theta1) * cos(phi1));
 
-            Point3D v2(radius * sin(theta2) * cos(phi1),
+            Point3D v2(radius * sin(theta2) * sin(phi1),
                        radius * cos(theta2),
-                       radius * sin(theta2) * sin(phi1));
+                       radius * sin(theta2) * cos(phi1));
 
-            Point3D v3(radius * sin(theta2) * cos(phi2),
+            Point3D v3(radius * sin(theta2) * sin(phi2),
                        radius * cos(theta2),
-                       radius * sin(theta2) * sin(phi2));
+                       radius * sin(theta2) * cos(phi2));
 
-            Point3D v4(radius * sin(theta1) * cos(phi2),
+            Point3D v4(radius * sin(theta1) * sin(phi2),
                        radius * cos(theta1),
-                       radius * sin(theta1) * sin(phi2));
+                       radius * sin(theta1) * cos(phi2));
 
-            // no polo norte o triangulo degenera, entao skip
-            if (i != 0)
+            // Diagonal v1-v3 (sup-esquerdo -> inf-direito)
+            // Triangulo 1: v1,v2,v3 (no polo norte v1=polo, v2,v3 distintos -> valido)
+            // No polo sul v2=v3=polo -> degenera, skip
+            if (i != stacks - 1)
             {
                 vertices.push_back(v1);
                 vertices.push_back(v2);
-                vertices.push_back(v4);
+                vertices.push_back(v3);
             }
 
-            // no polo sul tambem degenera
-            if (i != stacks - 1)
+            // Triangulo 2: v1,v3,v4 (no polo sul v3=polo, v1,v4 distintos -> valido)
+            // No polo norte v1=v4=polo -> degenera, skip
+            if (i != 0)
             {
-                vertices.push_back(v2);
+                vertices.push_back(v1);
                 vertices.push_back(v3);
                 vertices.push_back(v4);
             }
