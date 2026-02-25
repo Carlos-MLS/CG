@@ -34,7 +34,7 @@ inline vector<Point3D> gerarCone(float bottomRadius, float height, int slices, i
         Point3D p1(bottomRadius * cos(a1), 0.0f, bottomRadius * sin(a1));
         Point3D p2(bottomRadius * cos(a2), 0.0f, bottomRadius * sin(a2));
 
-        // CCW visto de baixo (normal aponta para baixo)
+        // CCW visto de baixo (normal aponta para baixo -Y)
         vertices.push_back(centro);
         vertices.push_back(p1);
         vertices.push_back(p2);

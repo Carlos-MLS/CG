@@ -6,17 +6,29 @@ A root é a pasta onde têm o build, engine, generator etc
   ou usar a app CMake como nas aulas
 
 2º GERAR PRIMITIVAS: (na build)
-./generator plane 2 3 plane_2_3.3d
-./generator box 2 3 box_2_3.3d
-./generator sphere 1 10 10 sphere_1_10_10.3d
 ./generator cone 1 2 4 3 cone_1_2_4_3.3d
+./generator sphere 1 10 10 sphere_1_10_10.3d
+./generator box 2 3 box_2_3.3d
+./generator plane 2 3 plane_2_3.3d
 
-3º VER NO ENGINE (OpenGL): (na build)
+Comando único (gerar todas):
+./generator cone 1 2 4 3 cone_1_2_4_3.3d && ./generator sphere 1 10 10 sphere_1_10_10.3d && ./generator box 2 3 box_2_3.3d && ./generator plane 2 3 plane_2_3.3d
+
+3º COPIAR XMLs DE TESTE: (na build)
+   cp ../test_files_phase_1/*.xml .
+
+4º VER NO ENGINE (OpenGL): (na build)
    ./engine test_1_1.xml
    ./engine test_1_2.xml
    ./engine test_1_3.xml
    ./engine test_1_4.xml
    ./engine test_1_5.xml
+   
+   Comando único (testar todos em sequência):
+   ./engine test_1_1.xml; ./engine test_1_2.xml; ./engine test_1_3.xml; ./engine test_1_4.xml; ./engine test_1_5.xml
+   
+   Alternativa (sem copiar os XMLs):
+   ./engine ../test_files_phase_1/test_1_1.xml
    
    ou usar XML personalizado:
    ./engine ../config.xml
@@ -68,16 +80,11 @@ ESTRUTURA:
 
 
 FICHEIROS DE TESTE (Fase 1):
-  test_1_1.xml - cone com FOV=60
-  test_1_2.xml - cone com FOV=20 (zoom)
+  test_1_1.xml - cone/pirâmide com FOV=60
+  test_1_2.xml - cone/pirâmide com FOV=20 (zoom)
   test_1_3.xml - esfera
   test_1_4.xml - box com clipping (far=3.5)
   test_1_5.xml - plane + esfera
-  
-Não esquecer:
-Os XMLs de teste estão em test_files_phase_1/ e devem ser copiados
-para a pasta build antes de executar o engine.
-Para copiar: cp ../test_files_phase_1/*.xml .
 
 
 

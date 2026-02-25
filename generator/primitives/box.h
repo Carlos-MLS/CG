@@ -86,9 +86,9 @@ inline vector<Point3D> gerarBox(float size, int divisions)
 
             vertices.push_back(Point3D(x1, halfSize, z1));
             vertices.push_back(Point3D(x1, halfSize, z2));
-            vertices.push_back(Point3D(x2, halfSize, z1));
+            vertices.push_back(Point3D(x2, halfSize, z2));
 
-            vertices.push_back(Point3D(x1, halfSize, z2));
+            vertices.push_back(Point3D(x1, halfSize, z1));
             vertices.push_back(Point3D(x2, halfSize, z2));
             vertices.push_back(Point3D(x2, halfSize, z1));
 
