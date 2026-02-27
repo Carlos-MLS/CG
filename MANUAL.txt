@@ -45,25 +45,6 @@ Comando único (gerar todas):
     3     - modo pontos
     ESC   - sair
 
-FORMATO .3D:
-  Linha 1: número de vértices
-  Restantes: x y z (um vértice por linha)
-
-FORMATO XML (config):
-  <world>
-    <window width="512" height="512" />
-    <camera>
-      <position x="3" y="2" z="1" />
-      <lookAt x="0" y="0" z="0" />
-      <up x="0" y="1" z="0" />
-      <projection fov="60" near="1" far="1000" />
-    </camera>
-    <group>
-      <models>
-        <model file="plane.3d" />
-      </models>
-    </group>
-  </world>
 
 
 ESTRUTURA:
@@ -72,6 +53,7 @@ ESTRUTURA:
     primitives/           - plane, box, sphere, cone
   engine/
     main.cpp              - engine OpenGL/GLUT
+    camera/camera.h       - struct Camera (orbital + fixa)
     parser/xmlparser.h    - le o XML de config
     model/model.h         - carrega ficheiros .3d
   utils/
