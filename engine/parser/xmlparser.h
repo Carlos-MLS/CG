@@ -30,7 +30,6 @@ struct WorldConfig
     vector<string> modelFiles;
 };
 
-// le o ficheiro xml e devolve a config toda
 inline WorldConfig parseXML(const string &filename)
 {
     WorldConfig config;
@@ -49,7 +48,7 @@ inline WorldConfig parseXML(const string &filename)
         return config;
     }
 
-    // window
+    // janela
     XMLElement *window = world->FirstChildElement("window");
     if (window)
     {

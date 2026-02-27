@@ -13,10 +13,10 @@ using namespace std;
 void printUsage()
 {
     cout << "Uso do Gerador de Primitivas:" << endl;
-    cout << "  generator plane <length> <divisions> <output_file>" << endl;
-    cout << "  generator box <size> <divisions> <output_file>" << endl;
-    cout << "  generator sphere <radius> <slices> <stacks> <output_file>" << endl;
-    cout << "  generator cone <radius> <height> <slices> <stacks> <output_file>" << endl;
+    cout << "  generator plane <comprimento> <divisoes> <ficheiro_saida>" << endl;
+    cout << "  generator box <tamanho> <divisoes> <ficheiro_saida>" << endl;
+    cout << "  generator sphere <raio> <fatias> <camadas> <ficheiro_saida>" << endl;
+    cout << "  generator cone <raio> <altura> <fatias> <camadas> <ficheiro_saida>" << endl;
     cout << endl;
     cout << "Exemplos:" << endl;
     cout << "  generator plane 5 10 plane.3d" << endl;
@@ -48,17 +48,17 @@ int main(int argc, char **argv)
                 return 1;
             }
 
-            float length = stof(argv[2]);
-            int divisions = stoi(argv[3]);
-            string outputPath = argv[4];
+            float comprimento = stof(argv[2]);
+            int divisoes = stoi(argv[3]);
+            string caminhoSaida = argv[4];
 
-            arrayVertices = gerarPlane(length, divisions);
-            if (!FileWriter::writeToFile(outputPath, arrayVertices))
+            arrayVertices = gerarPlane(comprimento, divisoes);
+            if (!FileWriter::writeToFile(caminhoSaida, arrayVertices))
             {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
             }
-            cout << "Plane gerado com sucesso: " << outputPath << endl;
+            cout << "Plane gerado com sucesso: " << caminhoSaida << endl;
         }
         else if (strcmp(primitiva.c_str(), "box") == 0)
         {
@@ -68,18 +68,18 @@ int main(int argc, char **argv)
                 printUsage();
                 return 1;
             }
-            float size = stof(argv[2]);
-            int divisions = stoi(argv[3]);
-            string outputPath = argv[4];
+            float tamanho = stof(argv[2]);
+            int divisoes = stoi(argv[3]);
+            string caminhoSaida = argv[4];
 
             // gerar a box e escrever no ficheiro
-            arrayVertices = gerarBox(size, divisions);
-            if (!FileWriter::writeToFile(outputPath, arrayVertices))
+            arrayVertices = gerarBox(tamanho, divisoes);
+            if (!FileWriter::writeToFile(caminhoSaida, arrayVertices))
             {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
             }
-            cout << "Box gerada com sucesso: " << outputPath << endl;
+            cout << "Box gerada com sucesso: " << caminhoSaida << endl;
         }
         else if (strcmp(primitiva.c_str(), "sphere") == 0)
         {
@@ -89,20 +89,20 @@ int main(int argc, char **argv)
                 printUsage();
                 return 1;
             }
-            float radius = stof(argv[2]);
-            int slices = stoi(argv[3]);
-            int stacks = stoi(argv[4]);
-            string outputPath = argv[5];
+            float raio = stof(argv[2]);
+            int fatias = stoi(argv[3]);
+            int camadas = stoi(argv[4]);
+            string caminhoSaida = argv[5];
 
             // gerar esfera
-            arrayVertices = gerarSphere(radius, slices, stacks);
+            arrayVertices = gerarSphere(raio, fatias, camadas);
 
-            if (!FileWriter::writeToFile(outputPath, arrayVertices))
+            if (!FileWriter::writeToFile(caminhoSaida, arrayVertices))
             {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
             }
-            cout << "Esfera gerada com sucesso: " << outputPath << endl;
+            cout << "Esfera gerada com sucesso: " << caminhoSaida << endl;
         }
         else if (strcmp(primitiva.c_str(), "cone") == 0)
         {
@@ -112,21 +112,21 @@ int main(int argc, char **argv)
                 printUsage();
                 return 1;
             }
-            float bottomRadius = stof(argv[2]);
-            float height = stof(argv[3]);
-            int slices = stoi(argv[4]);
-            int stacks = stoi(argv[5]);
-            string outputPath = argv[6];
+            float raioBase = stof(argv[2]);
+            float altura = stof(argv[3]);
+            int fatias = stoi(argv[4]);
+            int camadas = stoi(argv[5]);
+            string caminhoSaida = argv[6];
 
             // gerar o cone
-            arrayVertices = gerarCone(bottomRadius, height, slices, stacks);
+            arrayVertices = gerarCone(raioBase, altura, fatias, camadas);
 
-            if (!FileWriter::writeToFile(outputPath, arrayVertices))
+            if (!FileWriter::writeToFile(caminhoSaida, arrayVertices))
             {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
             }
-            cout << "Cone gerado com sucesso: " << outputPath << endl;
+            cout << "Cone gerado com sucesso: " << caminhoSaida << endl;
         }
         else
         {

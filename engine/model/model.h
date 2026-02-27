@@ -44,4 +44,4 @@ inline Model loadModel(const string &filename)
     return model;
 }
 
-#endif // MODEL_H
+#endif

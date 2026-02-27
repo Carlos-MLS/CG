@@ -10,32 +10,20 @@
 
 #include "parser/xmlparser.h"
 #include "model/model.h"
+#include "camera/camera.h"
 
 using namespace std;
 
 // vars globais
 WorldConfig config;
 vector<Model> models;
-
-// camera orbital
-float camAlpha = 0.0f;
-float camBeta = 0.0f;
-float camRadius = 5.0f;
-bool orbitalCam = false;
+Camera camera;
 
 GLenum modoDesenho = GL_LINE; // comeca em wireframe
 
 void changeSize(int w, int h)
 {
-    if (h == 0)
-        h = 1;
-    float ratio = (float)w / (float)h;
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glViewport(0, 0, w, h);
-    gluPerspective(config.camera.fov, ratio, config.camera.near, config.camera.far);
-    glMatrixMode(GL_MODELVIEW);
+    camera.resize(w, h);
 }
 
 void renderScene()
@@ -44,21 +32,7 @@ void renderScene()
     glLoadIdentity();
 
     // camera
-    if (orbitalCam)
-    {
-        float cx = camRadius * cos(camBeta) * sin(camAlpha);
-        float cy = camRadius * sin(camBeta);
-        float cz = camRadius * cos(camBeta) * cos(camAlpha);
-        gluLookAt(cx, cy, cz,
-                  config.camera.lookAtX, config.camera.lookAtY, config.camera.lookAtZ,
-                  config.camera.upX, config.camera.upY, config.camera.upZ);
-    }
-    else
-    {
-        gluLookAt(config.camera.posX, config.camera.posY, config.camera.posZ,
-                  config.camera.lookAtX, config.camera.lookAtY, config.camera.lookAtZ,
-                  config.camera.upX, config.camera.upY, config.camera.upZ);
-    }
+    camera.apply();
 
     glPolygonMode(GL_FRONT_AND_BACK, modoDesenho);
 
@@ -108,46 +82,8 @@ void processKeys(unsigned char key, int x, int y)
     case '3':
         modoDesenho = GL_POINT;
         break;
-    case 'c':
-    case 'C':
-        orbitalCam = !orbitalCam;
-        cout << (orbitalCam ? "Camera orbital ON" : "Camera fixa (XML)") << endl;
-        break;
-    case 'w':
-    case 'W':
-        camBeta += 0.1f;
-        if (camBeta > 1.5f)
-            camBeta = 1.5f;
-        orbitalCam = true;
-        break;
-    case 's':
-    case 'S':
-        camBeta -= 0.1f;
-        if (camBeta < -1.5f)
-            camBeta = -1.5f;
-        orbitalCam = true;
-        break;
-    case 'a':
-    case 'A':
-        camAlpha -= 0.1f;
-        orbitalCam = true;
-        break;
-    case 'd':
-    case 'D':
-        camAlpha += 0.1f;
-        orbitalCam = true;
-        break;
-    case 'q':
-    case 'Q':
-        camRadius -= 0.5f;
-        if (camRadius < 1.0f)
-            camRadius = 1.0f;
-        orbitalCam = true;
-        break;
-    case 'e':
-    case 'E':
-        camRadius += 0.5f;
-        orbitalCam = true;
+    default:
+        camera.processKey(key);
         break;
     }
     glutPostRedisplay();
@@ -179,13 +115,8 @@ int main(int argc, char **argv)
         }
     }
 
-    // inicializar a camera orbital com base na posicao do XML
-    float dist = sqrt(config.camera.posX * config.camera.posX +
-                      config.camera.posY * config.camera.posY +
-                      config.camera.posZ * config.camera.posZ);
-    camAlpha = atan2(config.camera.posX, config.camera.posZ);
-    camBeta = asin(config.camera.posY / dist);
-    camRadius = dist;
+    // inicializar a camera com base na config do XML
+    camera.initFromConfig(config.camera);
 
     // setup GLUT
     glutInit(&argc, argv);
