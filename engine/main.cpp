@@ -11,15 +11,51 @@
 #include "parser/xmlparser.h"
 #include "model/model.h"
 #include "camera/camera.h"
+#include "scene/group.h"
+
 
 using namespace std;
 
 // vars globais
 WorldConfig config;
-vector<Model> models;
 Camera camera;
 
 GLenum modoDesenho = GL_LINE; // comeca em wireframe
+
+
+//para aplicar transformações com o header transform que criaámos
+void applyTransform (const Transform &transform){
+    switch (transform.type)
+    {
+    case TransformType::Translate: glTranslatef(transform.x,transform.y,transform.z); break;
+    case TransformType::Rotate: glRotatef(transform.angle,transform.x,transform.y,transform.z); break;
+    case TransformType::Scale: glScalef(transform.x,transform.y,transform.z); break;
+    default:
+        break;
+    }
+
+}
+
+//agora desenhar o model
+void drawModelByFile (const string &file) {
+    Model model = loadModel(file);
+    if (model.vertices.empty()) return; //fail safe
+
+    glBegin(GL_TRIANGLES);
+    for (const auto &v : model.vertices) glVertex3f(v.x, v.y, v.z);
+    glEnd();
+
+}
+
+//Dar render ao group agora com as funcs que definimos antes 
+void renderGroup(const Group &group) {
+    glPushMatrix();
+    for (const auto &t : group.transforms) applyTransform(t);
+    for (const auto &f : group.modelFiles) drawModelByFile(f);
+    for (const auto &child : group.children) renderGroup(child);
+
+    glPopMatrix();
+}
 
 void changeSize(int w, int h)
 {
@@ -54,16 +90,8 @@ void renderScene()
 
     // desenhar os modelos todos
     glColor3f(1.0f, 1.0f, 1.0f);
-    for (const auto &model : models)
-    {
-        glBegin(GL_TRIANGLES);
-        for (const auto &v : model.vertices)
-        {
-            glVertex3f(v.x, v.y, v.z);
-        }
-        glEnd();
-    }
-
+    renderGroup(config.rootGroup);
+    
     glutSwapBuffers();
 }
 
@@ -105,15 +133,6 @@ int main(int argc, char **argv)
     cout << "Camera pos: (" << config.camera.posX << ", " << config.camera.posY
          << ", " << config.camera.posZ << ")" << endl;
 
-    // carregar os modelos .3d
-    for (const auto &f : config.modelFiles)
-    {
-        Model m = loadModel(f);
-        if (!m.vertices.empty())
-        {
-            models.push_back(m);
-        }
-    }
 
     // inicializar a camera com base na config do XML
     camera.initFromConfig(config.camera);

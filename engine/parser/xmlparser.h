@@ -5,6 +5,7 @@
 #include <vector>
 #include <tinyxml2.h>
 #include <iostream>
+#include "../scene/group.h"
 
 using namespace std;
 using namespace tinyxml2;
@@ -27,8 +28,54 @@ struct WorldConfig
 {
     WindowConfig window;
     CameraConfig camera;
-    vector<string> modelFiles;
+    Group rootGroup;
 };
+
+inline Group parseGroup(XMLElement *groupElem) {
+    Group group;
+
+    XMLElement *transform = groupElem->FirstChildElement("transform");
+    if (transform) {
+        for (XMLElement *t = transform->FirstChildElement(); t; t = t->NextSiblingElement()) {
+            string name = t->Value();
+            Transform tr;
+            if (name == "translate") {
+                tr.type = TransformType::Translate;
+                t->QueryFloatAttribute("x", &tr.x);
+                t->QueryFloatAttribute("y", &tr.y);
+                t->QueryFloatAttribute("z", &tr.z);
+                group.transforms.push_back(tr);
+            } else if (name == "rotate") {
+                tr.type = TransformType::Rotate;
+                t->QueryFloatAttribute("angle", &tr.angle);
+                t->QueryFloatAttribute("x", &tr.x);
+                t->QueryFloatAttribute("y", &tr.y);
+                t->QueryFloatAttribute("z", &tr.z);
+                group.transforms.push_back(tr);
+            } else if (name == "scale") {
+                tr.type = TransformType::Scale;
+                t->QueryFloatAttribute("x", &tr.x);
+                t->QueryFloatAttribute("y", &tr.y);
+                t->QueryFloatAttribute("z", &tr.z);
+                group.transforms.push_back(tr);
+            }
+        }
+    }
+
+    XMLElement *models = groupElem->FirstChildElement("models");
+    if (models) {
+        for (XMLElement *m = models->FirstChildElement("model"); m; m = m->NextSiblingElement("model")) {
+            const char *file = m->Attribute("file");
+            if (file) group.modelFiles.push_back(file);
+        }
+    }
+
+    for (XMLElement *child = groupElem->FirstChildElement("group"); child; child = child->NextSiblingElement("group"))
+        group.children.push_back(parseGroup(child));
+
+    return group;
+}
+
 
 inline WorldConfig parseXML(const string &filename)
 {
@@ -95,26 +142,13 @@ inline WorldConfig parseXML(const string &filename)
 
     // group -> models
     XMLElement *group = world->FirstChildElement("group");
-    if (group)
-    {
-        XMLElement *models = group->FirstChildElement("models");
-        if (models)
-        {
-            for (XMLElement *model = models->FirstChildElement("model");
-                 model != nullptr;
-                 model = model->NextSiblingElement("model"))
-            {
-
-                const char *file = model->Attribute("file");
-                if (file)
-                {
-                    config.modelFiles.push_back(string(file));
-                }
-            }
-        }
+    if (group) {
+        config.rootGroup = parseGroup(group);
     }
 
     return config;
 }
+
+
 
 #endif // XMLPARSER_H

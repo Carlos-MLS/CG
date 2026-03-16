@@ -15,20 +15,21 @@ Comando único (gerar todas):
 ./generator cone 1 2 4 3 cone_1_2_4_3.3d && ./generator sphere 1 10 10 sphere_1_10_10.3d && ./generator box 2 3 box_2_3.3d && ./generator plane 2 3 plane_2_3.3d
 
 3º COPIAR XMLs DE TESTE: (na build)
-   cp ../test_files_phase_1/*.xml .
+  cp ../test\ files/test_files_phase_1/*.xml .
+
 
 4º VER NO ENGINE (OpenGL): (na build)
-   ./engine test_1_1.xml
-   ./engine test_1_2.xml
-   ./engine test_1_3.xml
-   ./engine test_1_4.xml
-   ./engine test_1_5.xml
+./engine "../test files/test_files_phase_1/test_1_1.xml"
+./engine "../test files/test_files_phase_1/test_1_2.xml"
+./engine "../test files/test_files_phase_1/test_1_3.xml"
+./engine "../test files/test_files_phase_1/test_1_4.xml"
+./engine "../test files/test_files_phase_1/test_1_5.xml"
    
    Comando único (testar todos em sequência):
-   ./engine test_1_1.xml; ./engine test_1_2.xml; ./engine test_1_3.xml; ./engine test_1_4.xml; ./engine test_1_5.xml
+  ./engine "../test files/test_files_phase_1/test_1_1.xml"; ./engine "../test files/test_files_phase_1/test_1_2.xml"; ./engine "../test files/test_files_phase_1/test_1_3.xml"; ./engine "../test files/test_files_phase_1/test_1_4.xml"; ./engine "../test files/test_files_phase_1/test_1_5.xml"
    
    Alternativa (sem copiar os XMLs):
-   ./engine ../test_files_phase_1/test_1_1.xml
+  ./engine "../test files/test_files_phase_1/test_1_1.xml"
    
    ou usar XML personalizado:
    ./engine ../config.xml
@@ -56,12 +57,18 @@ ESTRUTURA:
     camera/camera.h       - struct Camera (orbital + fixa)
     parser/xmlparser.h    - le o XML de config
     model/model.h         - carrega ficheiros .3d
+  test files/
+    test_files_phase_1/   - testes da fase 1
+    test_files_phase_2/   - testes da fase 2
+    test_files_phase_3/   - testes da fase 3
+    test_files_phase_4/   - testes da fase 4
   utils/
     point.h               - struct Point3D
     fileWriter.h          - escreve vertices para ficheiro
 
 
 FICHEIROS DE TESTE (Fase 1):
+  Pasta: ../test files/test_files_phase_1/
   test_1_1.xml - cone/pirâmide com FOV=60
   test_1_2.xml - cone/pirâmide com FOV=20 (zoom)
   test_1_3.xml - esfera
