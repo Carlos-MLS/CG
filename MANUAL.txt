@@ -6,16 +6,28 @@ A root é a pasta onde têm o build, engine, generator etc
   ou usar a app CMake como nas aulas
 
 2º GERAR PRIMITIVAS: (na build)
+ 1º Fase
 ./generator cone 1 2 4 3 cone_1_2_4_3.3d
 ./generator sphere 1 10 10 sphere_1_10_10.3d
 ./generator box 2 3 box_2_3.3d
 ./generator plane 2 3 plane_2_3.3d
 
+ 2º Fase
+./generator box 2 3 box_2_3.3d
+./generator cone 1 2 4 3 cone_1_2_4_3.3d
+./generator sphere 1 8 8 sphere_1_8_8.3d
+
 Comando único (gerar todas):
+ 1º Fase
 ./generator cone 1 2 4 3 cone_1_2_4_3.3d && ./generator sphere 1 10 10 sphere_1_10_10.3d && ./generator box 2 3 box_2_3.3d && ./generator plane 2 3 plane_2_3.3d
+
+Comando único para a Segunda Fase:
+./generator box 2 3 box_2_3.3d && ./generator cone 1 2 4 3 cone_1_2_4_3.3d && ./generator sphere 1 8 8 sphere_1_8_8.3d
+
 
 3º COPIAR XMLs DE TESTE: (na build)
   cp ../test\ files/test_files_phase_1/*.xml .
+  cp ../test\ files/test_files_phase_2/*.xml .
 
 
 4º VER NO ENGINE (OpenGL): (na build)
@@ -30,6 +42,15 @@ Comando único (gerar todas):
    
    Alternativa (sem copiar os XMLs):
   ./engine "../test files/test_files_phase_1/test_1_1.xml"
+
+  Testes da 2º Fase:
+  ./engine "../test files/test_files_phase_2/test_2_1.xml"
+  ./engine "../test files/test_files_phase_2/test_2_2.xml"
+  ./engine "../test files/test_files_phase_2/test_2_3.xml"
+  ./engine "../test files/test_files_phase_2/test_2_4.xml"
+
+   Comando único (testar Fase 2 em sequência):
+   ./engine "../test files/test_files_phase_2/test_2_1.xml"; ./engine "../test files/test_files_phase_2/test_2_2.xml"; ./engine "../test files/test_files_phase_2/test_2_3.xml"; ./engine "../test files/test_files_phase_2/test_2_4.xml"
    
    ou usar XML personalizado:
    ./engine ../config.xml
