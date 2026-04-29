@@ -41,16 +41,64 @@ inline Group parseGroup(XMLElement *groupElem) {
             Transform tr;
             if (name == "translate") {
                 tr.type = TransformType::Translate;
-                t->QueryFloatAttribute("x", &tr.x);
-                t->QueryFloatAttribute("y", &tr.y);
-                t->QueryFloatAttribute("z", &tr.z);
+
+                if (t->QueryFloatAttribute("time", &tr.time) == XML_SUCCESS && tr.time > 0.0f) {
+                    tr.hasTime = true;
+
+                    const char* align = t->Attribute("align");
+                    if (!align) align = t->Attribute("alignToPath");
+                    if (align) {
+                        string alignValue = align;
+                        tr.alignToPath = (alignValue == "true" || alignValue == "True" || alignValue == "TRUE" || alignValue == "1");
+                    }
+
+                    for (XMLElement* cp = t->FirstChildElement("point"); cp; cp = cp->NextSiblingElement("point")) {
+                        Point3D point;
+                        cp->QueryFloatAttribute("x", &point.x);
+                        cp->QueryFloatAttribute("y", &point.y);
+                        cp->QueryFloatAttribute("z", &point.z);
+                        tr.controlPoints.push_back(point);
+                    }
+
+                    // compatibilidade com XMLs antigos
+                    if (tr.controlPoints.empty()) {
+                        for (XMLElement* cp = t->FirstChildElement("controlPoint"); cp; cp = cp->NextSiblingElement("controlPoint")) {
+                            Point3D point;
+                            cp->QueryFloatAttribute("x", &point.x);
+                            cp->QueryFloatAttribute("y", &point.y);
+                            cp->QueryFloatAttribute("z", &point.z);
+                            tr.controlPoints.push_back(point);
+                        }
+                    }
+
+                    if (tr.controlPoints.size() < 4) {
+                        tr.hasTime = false;
+                        tr.time = 0.0f;
+                        t->QueryFloatAttribute("x", &tr.x);
+                        t->QueryFloatAttribute("y", &tr.y);
+                        t->QueryFloatAttribute("z", &tr.z);
+                    }
+                }
+                else {
+                    t->QueryFloatAttribute("x", &tr.x);
+                    t->QueryFloatAttribute("y", &tr.y);
+                    t->QueryFloatAttribute("z", &tr.z);
+                }
+
                 group.transforms.push_back(tr);
             } else if (name == "rotate") {
                 tr.type = TransformType::Rotate;
-                t->QueryFloatAttribute("angle", &tr.angle);
                 t->QueryFloatAttribute("x", &tr.x);
                 t->QueryFloatAttribute("y", &tr.y);
                 t->QueryFloatAttribute("z", &tr.z);
+
+                if (t->QueryFloatAttribute("time", &tr.time) == XML_SUCCESS && tr.time > 0.0f) {
+                    tr.hasTime = true;
+                }
+                else {
+                    t->QueryFloatAttribute("angle", &tr.angle);
+                }
+
                 group.transforms.push_back(tr);
             } else if (name == "scale") {
                 tr.type = TransformType::Scale;

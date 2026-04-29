@@ -7,6 +7,7 @@
 #include "primitives/box.h"
 #include "primitives/sphere.h"
 #include "primitives/cone.h"
+#include "primitives/bezier.h"
 
 using namespace std;
 
@@ -17,12 +18,14 @@ void printUsage()
     cout << "  generator box <tamanho> <divisoes> <ficheiro_saida>" << endl;
     cout << "  generator sphere <raio> <fatias> <camadas> <ficheiro_saida>" << endl;
     cout << "  generator cone <raio> <altura> <fatias> <camadas> <ficheiro_saida>" << endl;
+    cout << "  generator patch <ficheiro_patch> <tessellation> <ficheiro_saida>" << endl;
     cout << endl;
     cout << "Exemplos:" << endl;
-    cout << "  generator plane 5 10 plane.3d" << endl;
-    cout << "  generator box 2 3 box.3d" << endl;
-    cout << "  generator sphere 1 20 20 sphere.3d" << endl;
-    cout << "  generator cone 1 2 20 10 cone.3d" << endl;
+    cout << "  ./generator plane 5 10 plane.3d" << endl;
+    cout << "  ./generator box 2 3 box.3d" << endl;
+    cout << "  ./generator sphere 1 20 20 sphere.3d" << endl;
+    cout << "  ./generator cone 1 2 20 10 cone.3d" << endl;
+    cout << "  ./generator patch ../teapot.patch 10 ../bezier_10.3d" << endl;
 }
 
 int main(int argc, char **argv)
@@ -127,6 +130,29 @@ int main(int argc, char **argv)
                 return 1;
             }
             cout << "Cone gerado com sucesso: " << caminhoSaida << endl;
+        }
+        //agora aqui se args for igual a 5 bezier
+        else if (strcmp(primitiva.c_str(), "patch") == 0) {
+            if (argc != 5) {
+                cerr << "Erro pq tem número incorreto de args para bezier patches" << endl;
+                printUsage();
+                return 1;
+            }
+            //fazer parse agr
+            string patchFile = argv[2];
+            int tess = stoi(argv[3]); //passar para int
+            string output = argv[4];
+
+            //agora chamar a func
+            arrayVertices = gerarBezierPatches(patchFile, tess);
+
+            if (!FileWriter::writeToFile(output, arrayVertices))
+            {
+                cerr << "Erro ao escrever o ficheiro" << endl;
+                return 1;
+            }
+            cout << "Patch gerado com sucesso: " << output << endl;
+
         }
         else
         {
