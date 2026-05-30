@@ -19,6 +19,11 @@
 #include "scene/group.h"
 
 
+#include <IL/il.h>     // Core DevIL functions
+#include <IL/ilu.h>    // Image manipulation
+#include <IL/ilut.h>   // Utility toolkit (OpenGL, etc.)
+
+
 using namespace std;
 
 // vars globais
@@ -27,13 +32,20 @@ Camera camera;
 
 GLenum modoDesenho = GL_LINE; // comeca em wireframe
 
+// buffers do modelo no GPU (vertices/normais/texcoords)
 struct ModelGPU {
-    GLuint vbo = 0;
-    int vertexCount = 0;
+    GLuint vboVertices = 0;
+    GLuint vboNormals = 0;
+    GLuint vboTexCoords = 0;
+    int vertexCount = 0; // numero total de vertices
+    bool hasNormals = false; // tem normais por vertice
+    bool hasTexCoords = false; // tem texcoords por vertice
 };
 
+// cache por caminho do ficheiro (evita uploads repetidos)
 unordered_map<std::string, ModelGPU> gpuCache;
 
+// faz upload do modelo para o GPU apenas uma vez
 void uploadModelIfNeeded(const string& file) {
     if (gpuCache.find(file) != gpuCache.end()) return; //modelo já está no GPU, não precisa de upload
 
@@ -43,9 +55,27 @@ void uploadModelIfNeeded(const string& file) {
     ModelGPU g;
     g.vertexCount = (int)m.vertices.size();
 
-    glGenBuffers(1, &g.vbo); //gerar um VBO no GPU e guardar o ID em g.vbo
-    glBindBuffer(GL_ARRAY_BUFFER, g.vbo); //fazer bind do VBO para poder usar
+    glGenBuffers(1, &g.vboVertices); //gerar um VBO no GPU e guardar o ID em g.vboVertices
+    glBindBuffer(GL_ARRAY_BUFFER, g.vboVertices); //fazer bind do VBO para poder usar
     glBufferData(GL_ARRAY_BUFFER, m.vertices.size() * sizeof(Point3D), m.vertices.data(), GL_STATIC_DRAW); //fazer upload dos vértices para o VBO
+
+    if (m.normals.size() == m.vertices.size()) // normais alinhadas com vertices
+    {
+        g.hasNormals = true;
+        glGenBuffers(1, &g.vboNormals);
+        glBindBuffer(GL_ARRAY_BUFFER, g.vboNormals);
+        glBufferData(GL_ARRAY_BUFFER, m.normals.size() * sizeof(Point3D), m.normals.data(), GL_STATIC_DRAW);
+    }
+
+    if (m.texCoords.size() == m.vertices.size()) // texcoords alinhadas com vertices
+    {
+        g.hasTexCoords = true;
+        glGenBuffers(1, &g.vboTexCoords);
+        glBindBuffer(GL_ARRAY_BUFFER, g.vboTexCoords);
+        glBufferData(GL_ARRAY_BUFFER, m.texCoords.size() * sizeof(Point2D), m.texCoords.data(), GL_STATIC_DRAW);
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     gpuCache[file] = g; //guardar o ModelGPU no cache para não precisar de fazer upload novamente
 }
@@ -54,6 +84,7 @@ void uploadModelIfNeeded(const string& file) {
 //está diferente a partir da fase 3 (por causa da parte da animação, mas a ideia geral é a mesma: verificar se o modelo já está no GPU, se não estiver fazer upload, e depois desenhar usando o VBO)
 
 
+// desenha o modelo usando os VBOs associados
 void drawModelByFile(const std::string& file) {
     uploadModelIfNeeded(file);
 
@@ -62,19 +93,227 @@ void drawModelByFile(const std::string& file) {
 
     const ModelGPU& g = it->second;
 
-    glBindBuffer(GL_ARRAY_BUFFER, g.vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, g.vboVertices);
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, sizeof(Point3D), 0);
+
+    if (g.hasNormals)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, g.vboNormals);
+        glEnableClientState(GL_NORMAL_ARRAY);
+        glNormalPointer(GL_FLOAT, sizeof(Point3D), 0);
+    }
+
+    if (g.hasTexCoords)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, g.vboTexCoords);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glTexCoordPointer(2, GL_FLOAT, sizeof(Point2D), 0);
+    }
+
     glDrawArrays(GL_TRIANGLES, 0, g.vertexCount);
     glDisableClientState(GL_VERTEX_ARRAY);
+
+    if (g.hasNormals)
+    {
+        glDisableClientState(GL_NORMAL_ARRAY);
+    }
+
+    if (g.hasTexCoords)
+    {
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
 //func para dar preload de todos os modelos usados no grupo e nos subgrupos, para garantir que estão no GPU antes de começar a renderizar
 void preloadGroupModels(const Group& group) {
-    for (const auto& f : group.modelFiles) uploadModelIfNeeded(f);
+    for (const auto& m : group.models) uploadModelIfNeeded(m.file);
     for (const auto& child : group.children) preloadGroupModels(child);
+}
+
+// aplicar material do modelo no pipeline fixo
+void applyMaterial(const Material& mat)
+{
+    GLfloat diffuse[4] = { mat.diffuse.r, mat.diffuse.g, mat.diffuse.b, 1.0f };
+    GLfloat ambient[4] = { mat.ambient.r, mat.ambient.g, mat.ambient.b, 1.0f };
+    GLfloat specular[4] = { mat.specular.r, mat.specular.g, mat.specular.b, 1.0f };
+    GLfloat emissive[4] = { mat.emissive.r, mat.emissive.g, mat.emissive.b, 1.0f };
+
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+    glMaterialfv(GL_FRONT, GL_EMISSION, emissive);
+    glMaterialf(GL_FRONT, GL_SHININESS, mat.shininess);
+}
+
+// configurar luzes do XML no OpenGL (max 8)
+void applyLights()
+{
+    if (config.lights.empty())
+    {
+        glDisable(GL_LIGHTING);
+        return;
+    }
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_NORMALIZE); // corrige normais quando ha escalas
+
+    int count = (int)config.lights.size();
+    if (count > 8) count = 8;
+
+    GLfloat lightAmbient[4] = { 0.2f, 0.2f, 0.2f, 1.0f }; //ambiente base por luz
+
+    for (int i = 0; i < count; i++)
+    {
+        const Light& light = config.lights[i];
+        GLenum lightId = GL_LIGHT0 + i;
+
+        GLfloat white[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        glEnable(lightId);
+        glLightfv(lightId, GL_AMBIENT, lightAmbient);
+        glLightfv(lightId, GL_DIFFUSE, white);
+        glLightfv(lightId, GL_SPECULAR, white);
+
+        if (light.type == LightType::Directional)
+        {
+            // nos testes, a direcao ja aponta da luz para a cena
+            GLfloat pos[4] = { light.direction.x, light.direction.y, light.direction.z, 0.0f };
+            glLightfv(lightId, GL_POSITION, pos);
+            glLightf(lightId, GL_SPOT_CUTOFF, 180.0f);
+        }
+        else
+        {
+            GLfloat pos[4] = { light.position.x, light.position.y, light.position.z, 1.0f };
+            glLightfv(lightId, GL_POSITION, pos);
+
+            if (light.type == LightType::Spot)
+            {
+                // nos testes, a direcao ja aponta da luz para a cena
+                GLfloat dir[3] = { light.direction.x, light.direction.y, light.direction.z };
+                glLightfv(lightId, GL_SPOT_DIRECTION, dir);
+                glLightf(lightId, GL_SPOT_CUTOFF, light.cutoff);
+            }
+            else
+            {
+                glLightf(lightId, GL_SPOT_CUTOFF, 180.0f);
+            }
+        }
+    }
+
+    for (int i = count; i < 8; i++)
+    {
+        glDisable(GL_LIGHT0 + i);
+    }
+}
+
+//Para a fase 4 do DevIL()
+//n esquecer que no glBindTexture(GL_TEXTURE_2D, 0) 
+//é para desfazer o bind da textura, e glDisable(GL_TEXTURE_2D) 
+
+unordered_map<string, GLuint> texturaCache; //usado em baixo
+ //cache de texturas para evitar uploads repetidos
+
+ //incializar o DevIL
+void initDevIL() {
+    ilInit(); //inicializar o DevIL
+    iluInit(); //inicializar o utilitario do DevIL
+    ilEnable(IL_ORIGIN_SET); //definir a origem das imagens para o canto inferior esquerdo, 
+    //para ser consistente com as coordenadas de textura do OpenGL
+    ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+}
+
+//dar load da textura do file, devil -> OpenGL
+GLuint loadTexturaFile(const string& path) {
+
+    ILuint imageId = 0; //ID da imagem no DevIL
+    ilGenImages(1, &imageId); //gerar uma imagem no DevIL
+    ilBindImage(imageId); //fazer bind da imagem para usar 
+
+    if (!ilLoadImage(path.c_str())) { //tentar carregar a imagem do file
+        ilDeleteImages(1, &imageId); //dar delete para evitar leaks
+        return 0; //retornar 0 para indicar falha
+    }
+
+    //se chegar aqui agr convertemos para RGBA para garantir que tem um formato consistente, 
+    //e depois fazemos upload para o OpenGL
+    ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+
+    int largura = ilGetInteger(IL_IMAGE_WIDTH);
+    int altura = ilGetInteger(IL_IMAGE_HEIGHT);
+    unsigned char* data = ilGetData();
+
+    GLuint texturaId = 0; //id da textura no OpenGL
+    glGenTextures(1, &texturaId); //gerar uma textura no OpenGL
+    glBindTexture(GL_TEXTURE_2D, texturaId); //fazer bind da textura para usar
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //definir o wrapping para repetir
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); //same para T
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //definir o filtro de minificação para linear
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //definir o filtro de magnificação para linear
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, largura, altura, 0, GL_RGBA, GL_UNSIGNED_BYTE, data); //fazer upload dos dados da imagem para a textura
+
+    glBindTexture(GL_TEXTURE_2D, 0); //desfazer bind da textura
+    ilDeleteImages(1, &imageId); //dar delete da imagem no DevIL
+
+    return texturaId; //retornar o ID da textura no OpenGL
+
+}
+
+//para cachear a textura por caminho 
+GLuint getTextura(const string& path) {
+    auto iter = texturaCache.find(path);
+
+    if (iter != texturaCache.end()) return iter->second; //se a textura já está no cache, retornar o ID
+
+    GLuint texturaId = loadTexturaFile(path); //caso contrário, carregar a textura do file
+    if (texturaId != 0) {
+        texturaCache[path] = texturaId; //guardar no cache para evitar uploads repetidos
+    }
+    return texturaId;
+}
+
+
+//dar/tirar textura do render  
+void applyTextura(const ModelInfo& model) {
+    
+    //na fase 4 os XMLs podem ter um atributo de textura opcional para cada modelo, 
+    //e se tiverem, devemos ativar a textura e fazer bind da textura correta antes de desenhar o modelo, e depois desativar a textura para não interferir com outros modelos que possam não ter textura
+    if (!model.hasTexture || model.textureFile.empty()) {
+        glDisable(GL_TEXTURE_2D); //sem textura definida no XML
+        return;
+    }
+
+    uploadModelIfNeeded(model.file); //garantir que o modelo está no GPU para poder usar as suas texcoords
+
+    auto iter = gpuCache.find(model.file);
+    //verificar se o modelo tem texcoords, para decidir se ativamos ou não a textura
+    bool hasTexCoords = (iter != gpuCache.end()) && iter->second.hasTexCoords;
+    if (!hasTexCoords) {
+        glDisable(GL_TEXTURE_2D); //desativar textura se o modelo não tem texcoords
+        return;
+    }
+
+    GLuint texturaId = getTextura(model.textureFile); //obter o ID da textura a partir do caminho do file
+    if (texturaId == 0) {
+        glDisable(GL_TEXTURE_2D); //desativar textura se falhou ao carregar
+        return;
+    }
+
+    //chega aqui ent temos uma textura válida, então ativamos a textura e fazemos bind para usar
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texturaId); //fazer bind da textura para usar
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); //definir o modo de aplicação da textura para modulate, para que a textura seja combinada com a cor do material
+
+}
+
+//só é chamada dentro do applyTextura, para garantir que só desativa a textura se o modelo não tiver texcoords ou se falhar ao carregar a textura, e não interfere com outros modelos que possam usar textura
+void unbindTexturaIfNeeded() {
+    glBindTexture(GL_TEXTURE_2D, 0); //desfazer bind da textura
+    glDisable(GL_TEXTURE_2D); //desativar textura
 }
 
 // funcs para renderizar o grupo, desenhar os modelos, aplicar as transformações, etc
@@ -210,7 +449,12 @@ void applyTransform (const Transform &transform){
 void renderGroup(const Group &group) {
     glPushMatrix();
     for (const auto &t : group.transforms) applyTransform(t);
-    for (const auto &f : group.modelFiles) drawModelByFile(f);
+    for (const auto &m : group.models) {
+        applyMaterial(m.material);
+        applyTextura(m); //ativar textura (se existir)
+        drawModelByFile(m.file);
+        unbindTexturaIfNeeded(); //evitar contaminar o proximo modelo
+    }
     for (const auto &child : group.children) renderGroup(child);
 
     glPopMatrix();
@@ -229,9 +473,13 @@ void renderScene()
     // camera
     camera.apply();
 
+    applyLights();
+
     glPolygonMode(GL_FRONT_AND_BACK, modoDesenho);
 
     // desenhar eixos ANTES dos modelos (com depth test ativo)
+    glPushAttrib(GL_ENABLE_BIT);
+    glDisable(GL_LIGHTING);
     glBegin(GL_LINES);
     // X vermelho
     glColor3f(1.0f, 0.0f, 0.0f);
@@ -246,6 +494,7 @@ void renderScene()
     glVertex3f(0.0f, 0.0f, -100.0f);
     glVertex3f(0.0f, 0.0f, 100.0f);
     glEnd();
+    glPopAttrib();
 
     // desenhar os modelos todos
     glColor3f(1.0f, 1.0f, 1.0f);
@@ -281,6 +530,7 @@ void idle() {
     glutPostRedisplay();
 }
 
+
 int main(int argc, char **argv)
 {
     if (argc < 2)
@@ -308,6 +558,8 @@ int main(int argc, char **argv)
     glutInitWindowSize(config.window.width, config.window.height);
     glutCreateWindow("CG Engine - Fase 1");
 
+    initDevIL(); //inicializar DevIL depois de criar o contexto OpenGL
+
     glutDisplayFunc(renderScene);
     glutReshapeFunc(changeSize);
     glutKeyboardFunc(processKeys);
@@ -315,6 +567,9 @@ int main(int argc, char **argv)
     // opengl stuff
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_RESCALE_NORMAL); // normaliza normais apos escalas uniformes
+    GLfloat amb[4] = { 1.0f, 1.0f, 1.0f, 1.0f }; // luz ambiente global
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, amb);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     preloadGroupModels(config.rootGroup); //fazer preload de todos os modelos para garantir que estão no GPU antes de começar a renderizar

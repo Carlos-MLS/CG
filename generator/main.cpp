@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     }
 
     string primitiva = argv[1];
-    vector<Point3D> arrayVertices;
+    geometryPointData data;
 
     try
     {
@@ -55,8 +55,8 @@ int main(int argc, char **argv)
             int divisoes = stoi(argv[3]);
             string caminhoSaida = argv[4];
 
-            arrayVertices = gerarPlane(comprimento, divisoes);
-            if (!FileWriter::writeToFile(caminhoSaida, arrayVertices))
+            data = gerarPlane(comprimento, divisoes);
+            if (!FileWriter::writeToFile(caminhoSaida, data))
             {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
@@ -76,8 +76,8 @@ int main(int argc, char **argv)
             string caminhoSaida = argv[4];
 
             // gerar a box e escrever no ficheiro
-            arrayVertices = gerarBox(tamanho, divisoes);
-            if (!FileWriter::writeToFile(caminhoSaida, arrayVertices))
+            data = gerarBox(tamanho, divisoes);
+            if (!FileWriter::writeToFile(caminhoSaida, data))
             {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
@@ -98,9 +98,9 @@ int main(int argc, char **argv)
             string caminhoSaida = argv[5];
 
             // gerar esfera
-            arrayVertices = gerarSphere(raio, fatias, camadas);
+            data = gerarSphere(raio, fatias, camadas);
 
-            if (!FileWriter::writeToFile(caminhoSaida, arrayVertices))
+            if (!FileWriter::writeToFile(caminhoSaida, data))
             {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
@@ -122,9 +122,9 @@ int main(int argc, char **argv)
             string caminhoSaida = argv[6];
 
             // gerar o cone
-            arrayVertices = gerarCone(raioBase, altura, fatias, camadas);
+            data = gerarCone(raioBase, altura, fatias, camadas);
 
-            if (!FileWriter::writeToFile(caminhoSaida, arrayVertices))
+            if (!FileWriter::writeToFile(caminhoSaida, data))
             {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;
@@ -144,9 +144,9 @@ int main(int argc, char **argv)
             string output = argv[4];
 
             //agora chamar a func
-            arrayVertices = gerarBezierPatches(patchFile, tess);
+            data = gerarBezierPatches(patchFile, tess);
 
-            if (!FileWriter::writeToFile(output, arrayVertices))
+            if (!FileWriter::writeToFile(output, data))
             {
                 cerr << "Erro ao escrever o ficheiro" << endl;
                 return 1;

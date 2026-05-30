@@ -7,8 +7,9 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+#include <cmath>
 #include "../../utils/point.h"
-
+#include "../../utils/geometry.h"
 using namespace std;
 
 //funcs para gerar os triângulos a partir dos patches de Bezier,
@@ -24,6 +25,29 @@ inline void calcularBernstein(float t, float b[4]) {
     b[1] = 3.0f * t * it * it;
     b[2] = 3.0f * t * t * it;
     b[3] = t * t * t;
+}
+
+//derivada dos coeficientes de Bernstein para obter as normais
+inline void calcularBernsteinDeriv(float t, float db[4]) {
+    float it = 1.0f - t;
+    db[0] = -3.0f * it * it;
+    db[1] = 3.0f * it * it - 6.0f * t * it;
+    db[2] = 6.0f * t * it - 3.0f * t * t;
+    db[3] = 3.0f * t * t;
+}
+
+inline Point3D crossP(const Point3D& a, const Point3D& b) {
+    return Point3D(
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    );
+}
+
+inline Point3D normalizeP(const Point3D& v) {
+    float len = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    if (len == 0.0f) return Point3D(0.0f, 1.0f, 0.0f);
+    return Point3D(v.x / len, v.y / len, v.z / len);
 }
 
 //calcula o ponto de Bezier para um dado u,v (entre 0 e 1) e um patch definido pelos seus índices e pelos pontos de controlo
@@ -53,7 +77,35 @@ inline Point3D calcularPontoBezier(float u, float v, const vector<int>& idxPatch
     return ponto;
 }
 
-inline vector<Point3D> gerarBezierPatches(const string& patchFile, int tess) 
+inline Point3D calcularNormalBezier(float u, float v, const vector<int>& idxPatch, const vector<Point3D>& controlPoints) {
+    float bu[4], bv[4], du[4], dv[4];
+    calcularBernstein(u, bu);
+    calcularBernstein(v, bv);
+    calcularBernsteinDeriv(u, du);
+    calcularBernsteinDeriv(v, dv);
+
+    Point3D dU(0.0f, 0.0f, 0.0f);
+    Point3D dV(0.0f, 0.0f, 0.0f);
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            const Point3D& cp = controlPoints[idxPatch[i * 4 + j]];
+            dU.x += du[i] * bv[j] * cp.x;
+            dU.y += du[i] * bv[j] * cp.y;
+            dU.z += du[i] * bv[j] * cp.z;
+
+            dV.x += bu[i] * dv[j] * cp.x;
+            dV.y += bu[i] * dv[j] * cp.y;
+            dV.z += bu[i] * dv[j] * cp.z;
+        }
+    }
+
+    return normalizeP(crossP(dU, dV));
+}
+
+//como tbm foi para o plane, agr para gerar tem de ser
+//geometryPointData gerarBezierPatches(const string& patchFile, int tess)
+inline geometryPointData gerarBezierPatches(const string& patchFile, int tess) 
 {
     //pegar no int no início para ter o nº de linhas
     //remover virgulas e espaços
@@ -148,7 +200,7 @@ inline vector<Point3D> gerarBezierPatches(const string& patchFile, int tess)
     //agr gerar os triângulos Bezier
     
 
-    vector<Point3D> vertices; //vetor para guardar os vértices dos triângulos gerados
+    geometryPointData data; //struct para guardar os dados dos triângulos gerados
     float passo = 1.0f / (float)tess; //calcular o passo para iterar sobre u e v
 
     //iterar sobre os patches, para cada patch iterar sobre u e v de 0 a 1 com o passo calculado, 
@@ -165,21 +217,36 @@ inline vector<Point3D> gerarBezierPatches(const string& patchFile, int tess)
                 //calcular os 4 pontos do quad usando a função calcularPontoBezier
                 Point3D p1 = calcularPontoBezier(u, v, idxPatch, controlPoints);
                 Point3D p2 = calcularPontoBezier(u + passo, v, idxPatch, controlPoints);
-                Point3D p3 = calcularPontoBezier(u + passo, v + passo, idxPatch, controlPoints);
-                Point3D p4 = calcularPontoBezier(u, v + passo, idxPatch, controlPoints);
+                Point3D p3 = calcularPontoBezier(u, v + passo, idxPatch, controlPoints);
+                Point3D p4 = calcularPontoBezier(u + passo, v + passo, idxPatch, controlPoints);
 
-                //adicionar os triângulos ao vetor de vértices (triângulo 1: p1,p4,p2 e triângulo 2: p2,p4,p3)
-                vertices.push_back(p1);
-                vertices.push_back(p4);
-                vertices.push_back(p2);
+                // normais por triângulo (mais alinhado com a referencia)
+                auto normalTri = [&](const Point3D& a, const Point3D& b, const Point3D& c) {
+                    Point3D uVec(b.x - a.x, b.y - a.y, b.z - a.z);
+                    Point3D vVec(c.x - a.x, c.y - a.y, c.z - a.z);
+                    return normalizeP(crossP(uVec, vVec));
+                };
 
-                vertices.push_back(p2);
-                vertices.push_back(p4);
-                vertices.push_back(p3);
+                Point3D n1 = normalTri(p1, p4, p2);
+                Point3D n2 = normalTri(p1, p3, p4);
+
+                float s1 = u;
+                float s2 = u + passo;
+                float t1 = 1.0f - v; // inverter t para alinhar a textura
+                float t2 = 1.0f - (v + passo);
+
+                //adicionar os triângulos ao vetor de vértices (triângulo 1: p1,p4,p2 e triângulo 2: p1,p3,p4)
+                data.vertices.push_back(p1); data.normals.push_back(n1); data.texCoords.push_back(Point2D(s1, t1));
+                data.vertices.push_back(p4); data.normals.push_back(n1); data.texCoords.push_back(Point2D(s2, t2));
+                data.vertices.push_back(p2); data.normals.push_back(n1); data.texCoords.push_back(Point2D(s2, t1));
+
+                data.vertices.push_back(p1); data.normals.push_back(n2); data.texCoords.push_back(Point2D(s1, t1));
+                data.vertices.push_back(p3); data.normals.push_back(n2); data.texCoords.push_back(Point2D(s1, t2));
+                data.vertices.push_back(p4); data.normals.push_back(n2); data.texCoords.push_back(Point2D(s2, t2));
             }
         }
     }
-    return vertices;
+    return data;
 }
 
 

@@ -1,11 +1,18 @@
 A root é a pasta onde têm o build, engine, generator etc
 
+0º DEPENDENCIAS (Linux):
+  sudo apt update
+  sudo apt install cmake g++ freeglut3-dev libdevil-dev libtinyxml2-dev
+
 1º COMPILAR (CMAKE): (na root)
+  mkdir -p build
   cd build
   cmake .. -B . && make
   ou usar a app CMake como nas aulas
 
-2º GERAR PRIMITIVAS: (na build)
+Comando para limpar pasta build: rm -rf *
+
+
  1º Fase
 ./generator cone 1 2 4 3 cone_1_2_4_3.3d
 ./generator sphere 1 10 10 sphere_1_10_10.3d
@@ -70,6 +77,19 @@ Comando único para a Segunda Fase:
    ./engine ../config.xml
 
 
+
+Fase 4
+./generator plane 2 3 plane_2_3.3d
+./generator cone 1 2 4 3 cone_1_2_4_3.3d
+./generator sphere 1 8 8 sphere_1_8_8.3d
+./generator box 2 3 box_2_3.3d
+./generator patch ../teapot.patch 10 bezier_10.3d
+cp "../test files/test_files_phase_4/"*.jpg .
+
+
+
+depois:
+./engine "../test files/test_files_phase_4/test_4_6.xml"
 
   O config.xml define a janela, camera e que modelos carregar.
   Controlos:
