@@ -143,10 +143,3 @@ ESTRUTURA:
     fileWriter.h          - escreve vertices para ficheiro
 
 
-FICHEIROS DE TESTE (Fase 1):
-  Pasta: ../test files/test_files_phase_1/
-  test_1_1.xml - cone/pirâmide com FOV=60
-  test_1_2.xml - cone/pirâmide com FOV=20 (zoom)
-  test_1_3.xml - esfera
-  test_1_4.xml - box com clipping (far=3.5)
-  test_1_5.xml - plane + esfera
