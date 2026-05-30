@@ -127,19 +127,20 @@ Comando único para a Segunda Fase:
 ESTRUTURA:
   generator/
     main.cpp              - programa que gera os .3d
-    primitives/           - plane, box, sphere, cone
+    primitives/           - plane, box, sphere, cone, bezier
   engine/
     main.cpp              - engine OpenGL/GLUT
     camera/camera.h       - struct Camera (orbital + fixa)
     parser/xmlparser.h    - le o XML de config
-    model/model.h         - carrega ficheiros .3d
+    model/model.h         - carrega ficheiros .3d com vertices, normais e texcoords
   test files/
     test_files_phase_1/   - testes da fase 1
     test_files_phase_2/   - testes da fase 2
     test_files_phase_3/   - testes da fase 3
     test_files_phase_4/   - testes da fase 4
   utils/
-    point.h               - struct Point3D
-    fileWriter.h          - escreve vertices para ficheiro
-
+    point.h               - structs Point3D e Point2D
+    geometry.h            - estrutura com vertices, normais e texcoords
+    fileWriter.h          - escreve vertices, normais e texcoords para ficheiro
+  relatorioFase4.pdf      - relatorio final
 
