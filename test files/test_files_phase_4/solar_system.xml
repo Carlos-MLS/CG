@@ -1,0 +1,428 @@
+<world>
+    <window width="1024" height="768" />
+    <camera>
+        <position x="0" y="45" z="90" />
+        <lookAt x="0" y="0" z="0" />
+        <up x="0" y="1" z="0" />
+        <projection fov="60" near="1" far="1000" />
+    </camera>
+
+    <lights>
+        <light type="point" posX="0" posY="0" posZ="0" />
+    </lights>
+
+    <group>
+        <!-- Sun -->
+        <group>
+            <transform>
+                <rotate time="18" x="0" y="1" z="0" />
+                <scale x="4" y="4" z="4" />
+            </transform>
+            <models>
+                <model file="sphere_1_8_8.3d">
+                    <color>
+                        <diffuse R="255" G="220" B="120" />
+                        <ambient R="255" G="180" B="70" />
+                        <specular R="0" G="0" B="0" />
+                        <emissive R="255" G="130" B="40" />
+                        <shininess value="0" />
+                    </color>
+                </model>
+            </models>
+        </group>
+
+        <!-- Mercury -->
+        <group>
+            <transform>
+                <rotate time="4" x="0" y="1" z="0" />
+                <translate x="8" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="2" x="0" y="1" z="0" />
+                    <scale x="0.35" y="0.35" z="0.35" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="mercurymap.jpg" />
+                        <color>
+                            <diffuse R="210" G="210" B="210" />
+                            <ambient R="35" G="35" B="35" />
+                            <specular R="20" G="20" B="20" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="10" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- Venus -->
+        <group>
+            <transform>
+                <rotate time="7" x="0" y="1" z="0" />
+                <translate x="12" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="4" x="0" y="1" z="0" />
+                    <scale x="0.55" y="0.55" z="0.55" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="venusmap.jpg" />
+                        <color>
+                            <diffuse R="230" G="200" B="150" />
+                            <ambient R="45" G="35" B="25" />
+                            <specular R="30" G="25" B="20" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="12" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- Earth and Moon -->
+        <group>
+            <transform>
+                <rotate time="10" x="0" y="1" z="0" />
+                <translate x="17" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="3" x="0" y="1" z="0" />
+                    <scale x="0.65" y="0.65" z="0.65" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="earthmap.jpg" />
+                        <color>
+                            <diffuse R="210" G="220" B="255" />
+                            <ambient R="30" G="35" B="50" />
+                            <specular R="90" G="90" B="90" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="30" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <group>
+                <transform>
+                    <rotate time="2" x="0" y="1" z="0" />
+                    <translate x="2" y="0" z="0" />
+                    <scale x="0.2" y="0.2" z="0.2" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="moonmap.jpg" />
+                        <color>
+                            <diffuse R="190" G="190" B="190" />
+                            <ambient R="25" G="25" B="25" />
+                            <specular R="20" G="20" B="20" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="5" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- Mars and two moons -->
+        <group>
+            <transform>
+                <rotate time="15" x="0" y="1" z="0" />
+                <translate x="23" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="3" x="0" y="1" z="0" />
+                    <scale x="0.5" y="0.5" z="0.5" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="marsmap.jpg" />
+                        <color>
+                            <diffuse R="230" G="120" B="80" />
+                            <ambient R="45" G="20" B="15" />
+                            <specular R="35" G="25" B="20" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="8" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <group>
+                <transform>
+                    <rotate time="1.5" x="0" y="1" z="0" />
+                    <translate x="1.5" y="0" z="0" />
+                    <scale x="0.12" y="0.12" z="0.12" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="moonmap.jpg" />
+                        <color>
+                            <diffuse R="160" G="150" B="140" />
+                            <ambient R="20" G="20" B="20" />
+                            <specular R="10" G="10" B="10" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="4" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <group>
+                <transform>
+                    <rotate time="2.2" x="0" y="1" z="0" />
+                    <translate x="2.2" y="0" z="0" />
+                    <scale x="0.1" y="0.1" z="0.1" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="moonmap.jpg" />
+                        <color>
+                            <diffuse R="150" G="140" B="130" />
+                            <ambient R="20" G="20" B="20" />
+                            <specular R="10" G="10" B="10" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="4" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- Jupiter and moons -->
+        <group>
+            <transform>
+                <rotate time="24" x="0" y="1" z="0" />
+                <translate x="32" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="2.5" x="0" y="1" z="0" />
+                    <scale x="1.3" y="1.3" z="1.3" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="jupitermap.jpg" />
+                        <color>
+                            <diffuse R="235" G="205" B="165" />
+                            <ambient R="45" G="35" B="25" />
+                            <specular R="40" G="35" B="30" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="10" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <group>
+                <transform>
+                    <rotate time="1.4" x="0" y="1" z="0" />
+                    <translate x="2.4" y="0" z="0" />
+                    <scale x="0.18" y="0.18" z="0.18" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="moonmap.jpg" />
+                        <color>
+                            <diffuse R="170" G="160" B="150" />
+                            <ambient R="20" G="20" B="20" />
+                            <specular R="10" G="10" B="10" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="4" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <group>
+                <transform>
+                    <rotate time="2.1" x="0" y="1" z="0" />
+                    <translate x="3.1" y="0" z="0" />
+                    <scale x="0.16" y="0.16" z="0.16" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="moonmap.jpg" />
+                        <color>
+                            <diffuse R="170" G="160" B="150" />
+                            <ambient R="20" G="20" B="20" />
+                            <specular R="10" G="10" B="10" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="4" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <group>
+                <transform>
+                    <rotate time="2.9" x="0" y="1" z="0" />
+                    <translate x="3.8" y="0" z="0" />
+                    <scale x="0.14" y="0.14" z="0.14" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="moonmap.jpg" />
+                        <color>
+                            <diffuse R="170" G="160" B="150" />
+                            <ambient R="20" G="20" B="20" />
+                            <specular R="10" G="10" B="10" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="4" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- Saturn with a flattened textured sphere as a ring -->
+        <group>
+            <transform>
+                <rotate time="32" x="0" y="1" z="0" />
+                <translate x="43" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="3" x="0" y="1" z="0" />
+                    <scale x="1.1" y="1.1" z="1.1" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="saturnmap.jpg" />
+                        <color>
+                            <diffuse R="230" G="210" B="165" />
+                            <ambient R="45" G="35" B="25" />
+                            <specular R="35" G="30" B="25" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="10" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <group>
+                <transform>
+                    <rotate angle="25" x="1" y="0" z="0" />
+                </transform>
+                <group>
+                    <transform>
+                        <rotate time="8" x="0" y="1" z="0" />
+                        <scale x="2.1" y="0.05" z="2.1" />
+                    </transform>
+                    <models>
+                        <model file="sphere_1_8_8.3d">
+                            <texture file="saturnringmap.jpg" />
+                            <color>
+                                <diffuse R="220" G="190" B="130" />
+                                <ambient R="35" G="30" B="20" />
+                                <specular R="20" G="15" B="10" />
+                                <emissive R="0" G="0" B="0" />
+                                <shininess value="5" />
+                            </color>
+                        </model>
+                    </models>
+                </group>
+            </group>
+            <group>
+                <transform>
+                    <rotate time="2.5" x="0" y="1" z="0" />
+                    <translate x="2.8" y="0" z="0" />
+                    <scale x="0.15" y="0.15" z="0.15" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="moonmap.jpg" />
+                        <color>
+                            <diffuse R="170" G="160" B="150" />
+                            <ambient R="20" G="20" B="20" />
+                            <specular R="10" G="10" B="10" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="4" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- Uranus -->
+        <group>
+            <transform>
+                <rotate time="42" x="0" y="1" z="0" />
+                <translate x="53" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="4" x="0" y="1" z="0" />
+                    <scale x="0.85" y="0.85" z="0.85" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="uranusmap.jpg" />
+                        <color>
+                            <diffuse R="180" G="230" B="230" />
+                            <ambient R="25" G="40" B="45" />
+                            <specular R="45" G="55" B="55" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="15" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- Neptune -->
+        <group>
+            <transform>
+                <rotate time="50" x="0" y="1" z="0" />
+                <translate x="62" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="4" x="0" y="1" z="0" />
+                    <scale x="0.8" y="0.8" z="0.8" />
+                </transform>
+                <models>
+                    <model file="sphere_1_8_8.3d">
+                        <texture file="neptunemap.jpg" />
+                        <color>
+                            <diffuse R="130" G="160" B="255" />
+                            <ambient R="20" G="25" B="45" />
+                            <specular R="50" G="50" B="70" />
+                            <emissive R="0" G="0" B="0" />
+                            <shininess value="18" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- Comet built from Bezier patches, moving on a Catmull-Rom curve -->
+        <group>
+            <transform>
+                <translate time="18" align="true">
+                    <point x="-48" y="6" z="18" />
+                    <point x="-34" y="15" z="-32" />
+                    <point x="-8" y="4" z="-52" />
+                    <point x="28" y="22" z="-35" />
+                    <point x="54" y="10" z="0" />
+                    <point x="24" y="28" z="36" />
+                    <point x="-14" y="8" z="54" />
+                    <point x="-42" y="18" z="34" />
+                </translate>
+                <rotate angle="-90" x="1" y="0" z="0" />
+                <scale x="0.28" y="0.28" z="0.28" />
+            </transform>
+            <models>
+                <model file="bezier_10.3d">
+                    <texture file="teapot.jpg" />
+                    <color>
+                        <diffuse R="220" G="220" B="220" />
+                        <ambient R="35" G="35" B="35" />
+                        <specular R="255" G="255" B="255" />
+                        <emissive R="15" G="15" B="25" />
+                        <shininess value="80" />
+                    </color>
+                </model>
+            </models>
+        </group>
+    </group>
+</world>

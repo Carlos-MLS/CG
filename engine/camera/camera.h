@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <string>
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -67,6 +68,40 @@ struct Camera
         glMatrixMode(GL_MODELVIEW);
     }
 
+    void printMode(const string &reason = "") const
+    {
+        cout << "Camera: " << (orbital ? "orbital" : "fixa XML");
+        if (!reason.empty())
+            cout << " (" << reason << ")";
+        cout << endl;
+    }
+
+    void printOrbitalState(const string &action) const
+    {
+        cout << "Camera orbital [" << action << "]: alpha=" << alpha
+             << " beta=" << beta << " radius=" << radius << endl;
+    }
+
+    void setOrbitalMode(bool value, const string &reason)
+    {
+        bool changed = (orbital != value);
+        orbital = value;
+
+        if (changed)
+            printMode(reason);
+        else
+            printMode(reason + ", sem alteracao");
+    }
+
+    void ensureOrbitalForControl(const string &action)
+    {
+        if (!orbital)
+        {
+            orbital = true;
+            printMode("ativada por " + action);
+        }
+    }
+
     void processKey(unsigned char key)
     {
         switch (key)
@@ -74,43 +109,57 @@ struct Camera
         case 'c':
         case 'C':
             orbital = !orbital;
-            cout << (orbital ? "Camera orbital ON" : "Camera fixa (XML)") << endl;
+            printMode("toggle C");
+            break;
+        case 'o':
+        case 'O':
+            setOrbitalMode(true, "tecla O");
+            break;
+        case 'f':
+        case 'F':
+            setOrbitalMode(false, "tecla F");
             break;
         case 'w':
         case 'W':
+            ensureOrbitalForControl("W");
             beta += 0.1f;
             if (beta > 1.5f)
                 beta = 1.5f;
-            orbital = true;
+            printOrbitalState("subir");
             break;
         case 's':
         case 'S':
+            ensureOrbitalForControl("S");
             beta -= 0.1f;
             if (beta < -1.5f)
                 beta = -1.5f;
-            orbital = true;
+            printOrbitalState("descer");
             break;
         case 'a':
         case 'A':
+            ensureOrbitalForControl("A");
             alpha -= 0.1f;
-            orbital = true;
+            printOrbitalState("rodar esquerda");
             break;
         case 'd':
         case 'D':
+            ensureOrbitalForControl("D");
             alpha += 0.1f;
-            orbital = true;
+            printOrbitalState("rodar direita");
             break;
         case 'q':
         case 'Q':
+            ensureOrbitalForControl("Q");
             radius -= 0.5f;
             if (radius < 1.0f)
                 radius = 1.0f;
-            orbital = true;
+            printOrbitalState("aproximar");
             break;
         case 'e':
         case 'E':
+            ensureOrbitalForControl("E");
             radius += 0.5f;
-            orbital = true;
+            printOrbitalState("afastar");
             break;
         }
     }

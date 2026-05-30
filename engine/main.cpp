@@ -30,7 +30,7 @@ using namespace std;
 WorldConfig config;
 Camera camera;
 
-GLenum modoDesenho = GL_LINE; // comeca em wireframe
+GLenum modoDesenho = GL_FILL; // comeca em solido
 
 // buffers do modelo no GPU (vertices/normais/texcoords)
 struct ModelGPU {
@@ -536,7 +536,7 @@ int main(int argc, char **argv)
     if (argc < 2)
     {
         cerr << "Uso: ./engine <config.xml>" << endl;
-        cerr << "Controlos: WASD (camera), QE (zoom), 1/2/3 (solid/wire/points), ESC (sair)" << endl;
+        cerr << "Controlos: O/F/C (camera orbital/fixa/toggle), WASD/QE (controlar orbital), 1/2/3 (solid/wire/points), ESC (sair)" << endl;
         return 1;
     }
 
@@ -550,13 +550,14 @@ int main(int argc, char **argv)
 
     // inicializar a camera com base na config do XML
     camera.initFromConfig(config.camera);
+    camera.printMode("inicial");
 
     // setup GLUT
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA); //depth buffer, double buffering, RGBA colors
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(config.window.width, config.window.height);
-    glutCreateWindow("CG Engine - Fase 1");
+    glutCreateWindow("CG Engine - Fase 4");
 
     initDevIL(); //inicializar DevIL depois de criar o contexto OpenGL
 
@@ -574,7 +575,14 @@ int main(int argc, char **argv)
 
     preloadGroupModels(config.rootGroup); //fazer preload de todos os modelos para garantir que estão no GPU antes de começar a renderizar
 
-    cout << "Controlos: WASD (camera), QE (zoom), C (toggle camera), 1/2/3 (render mode), ESC" << endl;
+    cout << "Controlos:" << endl;
+    cout << "  O - camera orbital" << endl;
+    cout << "  F - camera fixa definida no XML" << endl;
+    cout << "  C - alternar entre orbital/fixa" << endl;
+    cout << "  WASD - rodar camera orbital (ativa orbital automaticamente)" << endl;
+    cout << "  Q/E - aproximar/afastar camera orbital" << endl;
+    cout << "  1/2/3 - modo solido/wireframe/pontos" << endl;
+    cout << "  ESC - sair" << endl;
 
 
     glutIdleFunc(idle); //para garantir que a cena é redesenhada continuamente, mesmo sem input do user

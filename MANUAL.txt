@@ -25,7 +25,16 @@ Comando para limpar pasta build: rm -rf *
 ./generator sphere 1 8 8 sphere_1_8_8.3d
 
   3º Fase
+ ./generator sphere 1 8 8 sphere_1_8_8.3d
  ./generator patch ../teapot.patch 10 bezier_10.3d
+
+ 4º Fase
+./generator plane 2 3 plane_2_3.3d
+./generator cone 1 2 4 3 cone_1_2_4_3.3d
+./generator sphere 1 8 8 sphere_1_8_8.3d
+./generator box 2 3 box_2_3.3d
+./generator patch ../teapot.patch 10 bezier_10.3d
+cp "../test files/test_files_phase_4/"*.jpg .
 
 Comando único (gerar todas):
  1º Fase
@@ -35,13 +44,18 @@ Comando único para a Segunda Fase:
 ./generator box 2 3 box_2_3.3d && ./generator cone 1 2 4 3 cone_1_2_4_3.3d && ./generator sphere 1 8 8 sphere_1_8_8.3d
 
  Comando único para a Terceira Fase:
- ./generator patch ../teapot.patch 10 bezier_10.3d
+ ./generator sphere 1 8 8 sphere_1_8_8.3d && ./generator patch ../teapot.patch 10 bezier_10.3d
+
+ Comando único para a Quarta Fase:
+ ./generator plane 2 3 plane_2_3.3d && ./generator cone 1 2 4 3 cone_1_2_4_3.3d && ./generator sphere 1 8 8 sphere_1_8_8.3d && ./generator box 2 3 box_2_3.3d && ./generator patch ../teapot.patch 10 bezier_10.3d && cp "../test files/test_files_phase_4/"*.jpg .
 
 
 3º COPIAR XMLs DE TESTE: (na build)
   cp ../test\ files/test_files_phase_1/*.xml .
   cp ../test\ files/test_files_phase_2/*.xml .
   cp ../test\ files/test_files_phase_3/*.xml .
+  cp ../test\ files/test_files_phase_4/*.xml .
+  cp "../test files/test_files_phase_4/"*.jpg .
 
 
 4º VER NO ENGINE (OpenGL): (na build)
@@ -62,40 +76,47 @@ Comando único para a Segunda Fase:
   ./engine "../test files/test_files_phase_2/test_2_2.xml"
   ./engine "../test files/test_files_phase_2/test_2_3.xml"
   ./engine "../test files/test_files_phase_2/test_2_4.xml"
+  ./engine "../test files/test_files_phase_2/solar_system.xml"
 
    Comando único (testar Fase 2 em sequência):
-   ./engine "../test files/test_files_phase_2/test_2_1.xml"; ./engine "../test files/test_files_phase_2/test_2_2.xml"; ./engine "../test files/test_files_phase_2/test_2_3.xml"; ./engine "../test files/test_files_phase_2/test_2_4.xml"
+   ./engine "../test files/test_files_phase_2/test_2_1.xml"; ./engine "../test files/test_files_phase_2/test_2_2.xml"; ./engine "../test files/test_files_phase_2/test_2_3.xml"; ./engine "../test files/test_files_phase_2/test_2_4.xml"; ./engine "../test files/test_files_phase_2/solar_system.xml"
 
     Testes da 3º Fase:
     ./engine "../test files/test_files_phase_3/test_3_1.xml"
     ./engine "../test files/test_files_phase_3/test_3_2.xml"
+    ./engine "../test files/test_files_phase_3/solar_system.xml"
 
     Comando único (testar Fase 3 em sequência):
-    ./engine "../test files/test_files_phase_3/test_3_1.xml"; ./engine "../test files/test_files_phase_3/test_3_2.xml"
+    ./engine "../test files/test_files_phase_3/test_3_1.xml"; ./engine "../test files/test_files_phase_3/test_3_2.xml"; ./engine "../test files/test_files_phase_3/solar_system.xml"
+
+    Testes da 4º Fase:
+    ./engine "../test files/test_files_phase_4/test_4_1.xml"
+    ./engine "../test files/test_files_phase_4/test_4_2.xml"
+    ./engine "../test files/test_files_phase_4/test_4_3.xml"
+    ./engine "../test files/test_files_phase_4/test_4_4.xml"
+    ./engine "../test files/test_files_phase_4/test_4_5.xml"
+    ./engine "../test files/test_files_phase_4/test_4_6.xml"
+    ./engine "../test files/test_files_phase_4/solar_system.xml"
+
+    Comando único (testar Fase 4 em sequência):
+    ./engine "../test files/test_files_phase_4/test_4_1.xml"; ./engine "../test files/test_files_phase_4/test_4_2.xml"; ./engine "../test files/test_files_phase_4/test_4_3.xml"; ./engine "../test files/test_files_phase_4/test_4_4.xml"; ./engine "../test files/test_files_phase_4/test_4_5.xml"; ./engine "../test files/test_files_phase_4/test_4_6.xml"; ./engine "../test files/test_files_phase_4/solar_system.xml"
+
+    Demo final da Fase 4:
+    ./engine "../test files/test_files_phase_4/solar_system.xml"
+    Nota: a demo arranca em modo solido; usar 2 para wireframe e 3 para pontos.
    
    ou usar XML personalizado:
    ./engine ../config.xml
 
 
 
-Fase 4
-./generator plane 2 3 plane_2_3.3d
-./generator cone 1 2 4 3 cone_1_2_4_3.3d
-./generator sphere 1 8 8 sphere_1_8_8.3d
-./generator box 2 3 box_2_3.3d
-./generator patch ../teapot.patch 10 bezier_10.3d
-cp "../test files/test_files_phase_4/"*.jpg .
-
-
-
-depois:
-./engine "../test files/test_files_phase_4/test_4_6.xml"
-
   O config.xml define a janela, camera e que modelos carregar.
   Controlos:
-    WASD  - rodar camera
-    Q/E   - zoom in/out
-    C     - alternar camera fixa/orbital
+    O     - ativar camera orbital
+    F     - voltar para a camera fixa definida no XML
+    C     - alternar entre camera orbital e fixa
+    WASD  - rodar camera orbital (ativa orbital automaticamente)
+    Q/E   - aproximar/afastar camera orbital
     1     - modo solido
     2     - modo wireframe
     3     - modo pontos
@@ -129,7 +150,3 @@ FICHEIROS DE TESTE (Fase 1):
   test_1_3.xml - esfera
   test_1_4.xml - box com clipping (far=3.5)
   test_1_5.xml - plane + esfera
-
-
-
-
