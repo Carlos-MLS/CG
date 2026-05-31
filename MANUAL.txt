@@ -1,0 +1,151 @@
+A root é a pasta onde têm o build, engine, generator etc
+
+0º DEPENDENCIAS THIRD-PARTY (Linux/Ubuntu):
+  sudo apt update
+  sudo apt install cmake g++ freeglut3-dev libdevil-dev libtinyxml2-dev
+
+Bibliotecas usadas pelo projeto:
+  OpenGL / GLU usadas pelo engine para renderizacao 3D.
+  GLUT / freeglut usada para criar a janela, gerir callbacks e receber input.
+  DevIL/ILU usada para carregar imagens e criar texturas OpenGL.
+  TinyXML2 usada para ler os ficheiros XML das cenas.
+
+1º COMPILAR (CMAKE): (na root)
+  mkdir -p build
+  cd build
+  cmake .. -B . && make
+  ou usar a app CMake como nas aulas
+
+Comando para limpar pasta build: rm -rf *
+
+
+ 1º Fase
+./generator cone 1 2 4 3 cone_1_2_4_3.3d
+./generator sphere 1 10 10 sphere_1_10_10.3d
+./generator box 2 3 box_2_3.3d
+./generator plane 2 3 plane_2_3.3d
+
+ 2º Fase
+./generator box 2 3 box_2_3.3d
+./generator cone 1 2 4 3 cone_1_2_4_3.3d
+./generator sphere 1 8 8 sphere_1_8_8.3d
+
+  3º Fase
+ ./generator sphere 1 8 8 sphere_1_8_8.3d
+ ./generator patch ../teapot.patch 10 bezier_10.3d
+
+ 4º Fase
+./generator plane 2 3 plane_2_3.3d
+./generator cone 1 2 4 3 cone_1_2_4_3.3d
+./generator sphere 1 8 8 sphere_1_8_8.3d
+./generator box 2 3 box_2_3.3d
+./generator patch ../teapot.patch 10 bezier_10.3d
+cp "../test files/test_files_phase_4/"*.jpg .
+
+Comando único (gerar todas):
+ 1º Fase
+./generator cone 1 2 4 3 cone_1_2_4_3.3d && ./generator sphere 1 10 10 sphere_1_10_10.3d && ./generator box 2 3 box_2_3.3d && ./generator plane 2 3 plane_2_3.3d
+
+Comando único para a Segunda Fase:
+./generator box 2 3 box_2_3.3d && ./generator cone 1 2 4 3 cone_1_2_4_3.3d && ./generator sphere 1 8 8 sphere_1_8_8.3d
+
+ Comando único para a Terceira Fase:
+ ./generator sphere 1 8 8 sphere_1_8_8.3d && ./generator patch ../teapot.patch 10 bezier_10.3d
+
+ Comando único para a Quarta Fase:
+ ./generator plane 2 3 plane_2_3.3d && ./generator cone 1 2 4 3 cone_1_2_4_3.3d && ./generator sphere 1 8 8 sphere_1_8_8.3d && ./generator box 2 3 box_2_3.3d && ./generator patch ../teapot.patch 10 bezier_10.3d && cp "../test files/test_files_phase_4/"*.jpg .
+
+
+3º COPIAR XMLs DE TESTE: (na build)
+  cp ../test\ files/test_files_phase_1/*.xml .
+  cp ../test\ files/test_files_phase_2/*.xml .
+  cp ../test\ files/test_files_phase_3/*.xml .
+  cp ../test\ files/test_files_phase_4/*.xml .
+  cp "../test files/test_files_phase_4/"*.jpg .
+
+
+4º VER NO ENGINE (OpenGL): (na build)
+./engine "../test files/test_files_phase_1/test_1_1.xml"
+./engine "../test files/test_files_phase_1/test_1_2.xml"
+./engine "../test files/test_files_phase_1/test_1_3.xml"
+./engine "../test files/test_files_phase_1/test_1_4.xml"
+./engine "../test files/test_files_phase_1/test_1_5.xml"
+   
+   Comando único (testar todos em sequência):
+  ./engine "../test files/test_files_phase_1/test_1_1.xml"; ./engine "../test files/test_files_phase_1/test_1_2.xml"; ./engine "../test files/test_files_phase_1/test_1_3.xml"; ./engine "../test files/test_files_phase_1/test_1_4.xml"; ./engine "../test files/test_files_phase_1/test_1_5.xml"
+   
+   Alternativa (sem copiar os XMLs):
+  ./engine "../test files/test_files_phase_1/test_1_1.xml"
+
+  Testes da 2º Fase:
+  ./engine "../test files/test_files_phase_2/test_2_1.xml"
+  ./engine "../test files/test_files_phase_2/test_2_2.xml"
+  ./engine "../test files/test_files_phase_2/test_2_3.xml"
+  ./engine "../test files/test_files_phase_2/test_2_4.xml"
+  ./engine "../test files/test_files_phase_2/solar_system.xml"
+
+   Comando único (testar Fase 2 em sequência):
+   ./engine "../test files/test_files_phase_2/test_2_1.xml"; ./engine "../test files/test_files_phase_2/test_2_2.xml"; ./engine "../test files/test_files_phase_2/test_2_3.xml"; ./engine "../test files/test_files_phase_2/test_2_4.xml"; ./engine "../test files/test_files_phase_2/solar_system.xml"
+
+    Testes da 3º Fase:
+    ./engine "../test files/test_files_phase_3/test_3_1.xml"
+    ./engine "../test files/test_files_phase_3/test_3_2.xml"
+    ./engine "../test files/test_files_phase_3/solar_system.xml"
+
+    Comando único (testar Fase 3 em sequência):
+    ./engine "../test files/test_files_phase_3/test_3_1.xml"; ./engine "../test files/test_files_phase_3/test_3_2.xml"; ./engine "../test files/test_files_phase_3/solar_system.xml"
+
+    Testes da 4º Fase:
+    ./engine "../test files/test_files_phase_4/test_4_1.xml"
+    ./engine "../test files/test_files_phase_4/test_4_2.xml"
+    ./engine "../test files/test_files_phase_4/test_4_3.xml"
+    ./engine "../test files/test_files_phase_4/test_4_4.xml"
+    ./engine "../test files/test_files_phase_4/test_4_5.xml"
+    ./engine "../test files/test_files_phase_4/test_4_6.xml"
+    ./engine "../test files/test_files_phase_4/solar_system.xml"
+
+    Comando único (testar Fase 4 em sequência):
+    ./engine "../test files/test_files_phase_4/test_4_1.xml"; ./engine "../test files/test_files_phase_4/test_4_2.xml"; ./engine "../test files/test_files_phase_4/test_4_3.xml"; ./engine "../test files/test_files_phase_4/test_4_4.xml"; ./engine "../test files/test_files_phase_4/test_4_5.xml"; ./engine "../test files/test_files_phase_4/test_4_6.xml"; ./engine "../test files/test_files_phase_4/solar_system.xml"
+
+    Demo final da Fase 4:
+    ./engine "../test files/test_files_phase_4/solar_system.xml"
+    Nota: a demo arranca em modo solido; usar 2 para wireframe e 3 para pontos.
+   
+   ou usar XML personalizado:
+   ./engine ../config.xml
+
+
+
+  O config.xml define a janela, camera e que modelos carregar.
+  Controlos:
+    O     - ativar camera orbital
+    F     - voltar para a camera fixa definida no XML
+    C     - alternar entre camera orbital e fixa
+    WASD  - rodar camera orbital (ativa orbital automaticamente)
+    Q/E   - aproximar/afastar camera orbital
+    1     - modo solido
+    2     - modo wireframe
+    3     - modo pontos
+    ESC   - sair
+
+
+
+ESTRUTURA:
+  generator/
+    main.cpp              - programa que gera os .3d
+    primitives/           - plane, box, sphere, cone, bezier
+  engine/
+    main.cpp              - engine OpenGL/GLUT
+    camera/camera.h       - struct Camera (orbital + fixa)
+    parser/xmlparser.h    - le o XML de config
+    model/model.h         - carrega ficheiros .3d com vertices, normais e texcoords
+  test files/
+    test_files_phase_1/   - testes da fase 1
+    test_files_phase_2/   - testes da fase 2
+    test_files_phase_3/   - testes da fase 3
+    test_files_phase_4/   - testes da fase 4
+  utils/
+    point.h               - structs Point3D e Point2D
+    geometry.h            - estrutura com vertices, normais e texcoords
+    fileWriter.h          - escreve vertices, normais e texcoords para ficheiro
+  relatorioFase4.pdf      - relatorio final
